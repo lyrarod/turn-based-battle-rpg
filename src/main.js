@@ -6,10 +6,10 @@ import { Game } from "./classes/game";
 let randomImage = () => {
   let images = [
     "bg/battle_bg_0005_01.jpg",
-    "bg/battle_bg_0001_01.jpg",
-    "bg/battle_bg_0003_01.jpg",
-    "bg/battle_bg_0018_01.jpg",
-    "bg/battle_bg_0004_01.jpg",
+    "bg/battle_bg_0002_03.jpg",
+    "bg/battle_bg_0005_01.jpg",
+    "bg/battle_bg_0009_01.jpg",
+    "bg/battle_bg_0017_01.jpg",
   ];
   return images[Math.floor(Math.random() * images.length)];
 };

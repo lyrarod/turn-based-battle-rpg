@@ -12,10 +12,12 @@ export class Enemy {
     this.sprite = new Image();
     this.sprite.src = "";
     this.frame = 0;
+    this.frameInterval = 1000 / 12;
     this.loop = null;
     this.hp = 300;
     this.maxhp = 300;
-    this.damage = 8;
+    this.damage = 10;
+    this.maxDamage = 30;
     this.icon = "frost-dragon-icon.png";
     this.avatarEl = document.getElementById("enemyAvatar");
     this.avatarEl.src = this.icon;
@@ -24,10 +26,10 @@ export class Enemy {
     this.hpEl = document.getElementById("enemyHP");
     this.hpEl.innerText = this.hp;
 
-    this.attackAudios = [
-      new Audio("Dragon_Attack_1.mp3"),
-      new Audio("Dragon_Attack_2.mp3"),
-    ];
+    this.attackAudios = {
+      attack: new Audio("33HitFist.wav"),
+      furiousAttack: new Audio("Dragon_Attack_2.mp3"),
+    };
     this.attackAudio = "";
 
     this.animations = {
@@ -55,36 +57,76 @@ export class Enemy {
     };
 
     this.defeated = false;
-    this.playAnimation("idle", { loop: true });
+    this.playAnimation("idle");
+
+    this.sprite_action = {
+      idle: new Image(),
+      attack: new Image(),
+      hit: new Image(),
+    };
+    this.sprite_action.idle.src = "frost-dragon-idle.png";
+    this.sprite_action.attack.src = "frost-dragon-attack.png";
+    this.sprite_action.hit.src = "frost-dragon-hit.png";
+
+    this.isAttacking = false;
+    this.isTakeDamage = false;
+
+    this.enemyATK = document.getElementById("enemyATK");
+    this.enemyATK.innerText = `${this.damage}~${this.maxDamage}`;
+    this.timer = null;
   }
 
-  playAudioAttack() {
-    this.attackAudio =
-      this.attackAudios[Math.floor(Math.random() * this.attackAudios.length)];
+  playAudioAttack({ type = "attack" | "furiousAttack" }) {
+    this.attackAudio = this.attackAudios[type];
     this.attackAudio.currentTime = 0;
     this.attackAudio.play();
   }
 
   attack() {
     if (this.game.playerTurn) return;
-    this.playAnimation("attack", { loop: false });
-    this.game.gameEl.classList.add("animate__animated", "animate__shakeX");
+    this.isAttacking = true;
+    hud.classList.add("animate__animated", "animate__shakeX");
 
-    this.playAudioAttack();
+    this.playAudioAttack({ type: "attack" });
 
-    setTimeout(() => {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
       this.game.playerTurn = true;
-      let damage = this.damage + Math.floor(Math.random() * 12);
+      let damage = this.damage + Math.floor(Math.random() * 11);
       this.game.hero.takeDamage(damage);
-      this.playAnimation("idle", { loop: true });
+      this.isAttacking = false;
     }, 2500);
 
-    this.game.gameEl.addEventListener("animationend", () => {
-      this.game.gameEl.classList.remove("animate__animated", "animate__shakeX");
+    hud.addEventListener("animationend", (e) => {
+      e.target.classList.remove("animate__animated", "animate__shakeX");
+    });
+  }
+
+  furiousAttack() {
+    if (this.game.playerTurn) return;
+    this.isAttacking = true;
+    hud.classList.add("animate__animated", "animate__shakeX");
+
+    this.playAudioAttack({ type: "furiousAttack" });
+
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.game.playerTurn = true;
+      let damage =
+        this.damage + Math.floor(Math.random() * (this.maxDamage - 9));
+      // console.log("furiousAttack:", damage);
+      this.game.hero.takeDamage(damage);
+      this.isAttacking = false;
+    }, 2500);
+
+    hud.addEventListener("animationend", (e) => {
+      e.target.classList.remove("animate__animated", "animate__shakeX");
     });
   }
 
   takeDamage(damage) {
+    this.isTakeDamage = true;
+
     this.hp -= damage;
     if (this.hp <= 0) {
       this.hp = 0;
@@ -92,10 +134,10 @@ export class Enemy {
     }
     this.hpEl.innerText = this.hp;
 
-    this.playAnimation("hit");
+    clearTimeout(this.timer);
 
     if (this.defeated) {
-      setTimeout(() => {
+      this.timer = setTimeout(() => {
         alert(`You Won! 🎉 \nYou defeated ${this.name}.`);
         location.reload();
       }, 1500);
@@ -103,11 +145,11 @@ export class Enemy {
       return null;
     }
 
-    setTimeout(() => {
-      this.playAnimation("idle", { loop: true });
+    this.timer = setTimeout(() => {
+      this.isTakeDamage = false;
     }, 1500);
 
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.attack();
     }, 4000);
   }
@@ -132,6 +174,54 @@ export class Enemy {
   draw() {
     if (!this.game.ctx) return;
 
+    if (this.isTakeDamage) {
+      this.game.ctx.drawImage(
+        this.sprite_action.hit,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+
+      return null;
+    }
+
+    if (this.isAttacking) {
+      this.width = this.animations["attack"].width;
+      this.height = this.animations["attack"].height;
+      this.framex = Array.from({
+        length: this.animations["attack"].framex,
+      }).map((_, i) => i);
+      this.framey = Array.from({
+        length: this.animations["attack"].framey,
+      }).map((_, i) => i);
+      this.loop = true;
+
+      this.game.ctx.drawImage(
+        this.sprite_action.attack,
+        this.framex[this.idx] * this.width,
+        this.framey[this.idy] * this.height,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+
+      return null;
+    }
+
+    this.width = this.animations["idle"].width;
+    this.height = this.animations["idle"].height;
+    this.framex = Array.from({
+      length: this.animations["idle"].framex,
+    }).map((_, i) => i);
+    this.framey = Array.from({
+      length: this.animations["idle"].framey,
+    }).map((_, i) => i);
+    this.loop = true;
+
     this.game.ctx.drawImage(
       this.sprite,
       this.framex[this.idx] * this.width,
@@ -148,10 +238,10 @@ export class Enemy {
     // this.game.ctx.strokeRect(this.x, this.y, this.width, this.height);
   }
 
-  update() {
+  update(deltaTime) {
     this.draw();
 
-    if (this.frame % 8 === 0) {
+    if (this.frame > this.frameInterval) {
       this.idx++;
       if (this.idx >= this.framex.length) {
         if (this.loop) {
@@ -169,9 +259,12 @@ export class Enemy {
           }
         }
       }
+
       this.frame = 0;
+    } else {
+      this.frame += deltaTime;
     }
 
-    this.frame++;
+    // this.frame++;
   }
 }

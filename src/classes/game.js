@@ -23,17 +23,22 @@ export class Game {
     ];
     this.randomMusic =
       this.musics[Math.floor(Math.random() * this.musics.length)];
+
+    this.lastTime = 0;
   }
 
-  update() {
-    this.gameObjects.forEach((gameObject) => gameObject.update());
+  update(deltaTime) {
+    this.gameObjects.forEach((gameObject) => gameObject.update(deltaTime));
   }
 
-  loop() {
-    requestAnimationFrame(() => this.loop());
+  loop = (timeStamp = 0) => {
+    let deltaTime = timeStamp - this.lastTime;
+    this.lastTime = timeStamp;
+    // console.log(Math.floor(deltaTime));
+    requestAnimationFrame(this.loop);
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.update();
-  }
+    this.update(deltaTime);
+  };
 
   init() {
     this.loop();
@@ -43,7 +48,8 @@ export class Game {
     this.randomMusic =
       this.musics[Math.floor(Math.random() * this.musics.length)];
     this.randomMusic.currentTime = 0;
-    this.randomMusic.volume = 0.25;
+    this.randomMusic.volume = 0.4;
+    this.randomMusic.loop = true;
     this.randomMusic.play();
   }
 

@@ -11,13 +11,18 @@ export class Hero {
     this.avatarEl.src = this.icon;
     this.name = "Hero";
 
-    this.attackAudios = [
-      new Audio("33HitFist.wav"),
-      new Audio("2ESwordSlashLong.wav"),
-      new Audio("8ADirkSlash.wav"),
-      new Audio("8BClawSlash.wav"),
-    ];
+    this.attackAudios = {
+      attack: new Audio("8BClawSlash.wav"),
+      criticalAttack: new Audio("2ESwordSlashLong.wav"),
+    };
     this.attackAudio = "";
+
+    this.attacks = [
+      ...Array(3).fill(this.attack),
+      ...Array(1).fill(this.criticalAttack),
+    ];
+    this.currentAttack = null;
+    // console.log(this.attacks);
 
     this.hpEl = document.getElementById("playerHP");
     this.hpEl.innerText = this.hp;
@@ -31,7 +36,10 @@ export class Hero {
     this.buttons.forEach((button) => {
       button.addEventListener("click", (e) => {
         if (e.target.id === "attackBtn") {
-          this.attack();
+          this.currentAttack =
+            this.attacks[Math.floor(Math.random() * this.attacks.length)];
+          this.currentAttack();
+          // console.log(this.currentAttack);
         }
 
         if (e.target.id === "healBtn") {
@@ -49,9 +57,8 @@ export class Hero {
     this.healAudio = new Audio("7DHealingSound.wav");
   }
 
-  playAudioAttack() {
-    this.attackAudio =
-      this.attackAudios[Math.floor(Math.random() * this.attackAudios.length)];
+  playAudioAttack({ type = "attack" | "criticalAttack" }) {
+    this.attackAudio = this.attackAudios[type];
     this.attackAudio.currentTime = 0;
     this.attackAudio.play();
   }
@@ -75,7 +82,7 @@ export class Hero {
 
   heal() {
     if (!this.game.playerTurn) return;
-    const mpcost = 20;
+    const mpcost = 25;
     if (this.hp >= this.maxhp) {
       this.game.playerTurn = true;
       return this.showDialog({ message: `You are already at full health!` });
@@ -87,20 +94,19 @@ export class Hero {
     this.healAudio.currentTime = 0;
     this.healAudio.play();
     this.mp -= mpcost;
-    let heal = 25 + Math.floor(Math.random() * 75);
+    let heal = 30 + Math.floor(Math.random() * 71);
     this.hp += heal;
-    console.log("heal:", heal);
+    // console.log("heal:", heal);
     if (this.hp > this.maxhp) {
       this.hp = this.maxhp;
     }
     this.mpEl.innerText = this.mp;
     this.hpEl.innerText = this.hp;
     this.showDialog({ message: `You healed for ${heal} HP.` });
-    this.playAudioAttack();
 
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
-      this.game.enemy.attack();
+      this.game.enemy.furiousAttack();
     }, 2500);
 
     this.game.playerTurn = false;
@@ -109,17 +115,30 @@ export class Hero {
   attack() {
     if (!this.game.playerTurn) return;
     this.game.playerTurn = false;
-    let damage = this.damage + Math.floor(Math.random() * 15);
-    console.log("attack:", damage);
+    let damage = this.damage + Math.floor(Math.random() * 16);
+    // console.log("attack:", damage);
+
     this.game.enemy.takeDamage(damage);
-    this.playAudioAttack();
+    this.playAudioAttack({ type: "attack" });
     this.showDialog({ message: `${this.name} dealt ${damage} damage.` });
+  }
+
+  criticalAttack() {
+    if (!this.game.playerTurn) return;
+    this.game.playerTurn = false;
+    let damage = this.damage * 10 + Math.floor(Math.random() * 101);
+    // console.log("attack:", damage);
+    this.game.enemy.takeDamage(damage);
+    this.playAudioAttack({ type: "criticalAttack" });
+    this.showDialog({
+      message: `CRITICAL ATTACK! ${this.name} dealt ${damage} damage.`,
+    });
   }
 
   takeDamage(damage) {
     if (!this.game.playerTurn) return;
     this.hp -= damage;
-    console.log("takeDamage:", damage);
+    // console.log("takeDamage:", damage);
 
     if (this.hp <= 0) {
       this.hp = 0;
