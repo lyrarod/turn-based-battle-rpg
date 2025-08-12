@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="game" class="">
+        <button id="playBtn">Play Now</button>
+        <canvas id="canvas" width="600" height="800"></canvas>
+
+        <p id="dialog">
+          <img id="dialogIcon" class="avatar" />
+          <span id="dialogText"></span>
+        </p>
+
+        <div id="hud">
+          <div id="player">
+            <div id="playerStats">
+              <img id="playerAvatar" class="avatar" alt="Avatar" />
+              <div id="playerInfo">
+                <p>
+                  HP:
+                  <span id="playerHP" class=""></span>
+                </p>
+                <p>
+                  MP:
+                  <span id="playerMP" class=""></span>
+                </p>
+              </div>
+            </div>
+
+            <div id="attacks">
+              <button id="attackBtn" class="btn">Attack</button>
+              <button id="healBtn" class="btn">Heal</button>
+            </div>
+          </div>
+
+          <div id="separator"></div>
+
+          <div id="enemy">
+            <div id="enemyStats">
+              <img id="enemyAvatar" class="avatar" alt="Avatar" />
+
+              <div>
+                <p>
+                  HP:
+                  <span id="enemyHP" class=""></span>
+                </p>
+                <p>
+                  MP:
+                  <span id="enemyMP" class="">100</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
