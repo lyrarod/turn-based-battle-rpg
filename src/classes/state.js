@@ -5,7 +5,7 @@ export const enemies = [
     name: "Frost Dragon",
     hp: 300,
     maxhp: 300,
-    damage: 10,
+    damage: 15,
     maxDamage: 25,
     icon: "frost-dragon-icon.png",
     animations: {

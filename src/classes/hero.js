@@ -3,20 +3,14 @@ export class Hero {
     this.game = game;
     this.hp = 100;
     this.maxhp = 100;
-    this.mp = 100;
-    this.maxmp = 100;
+    this.mp = 10;
+    this.maxmp = 10;
     this.damage = 10;
+    this.maxDamage = 20;
     this.icon = "unit_icon_202000507.png";
     this.avatarEl = document.getElementById("playerAvatar");
     this.avatarEl.src = this.icon;
     this.name = "Hero";
-
-    this.attacks = [
-      ...Array(2).fill(this.attack),
-      ...Array(1).fill(this.criticalAttack),
-    ];
-    this.currentAttack = null;
-    // console.log(this.attacks);
 
     this.attackAudios = {
       attack: new Audio("8BClawSlash.wav"),
@@ -28,10 +22,20 @@ export class Hero {
     this.hpEl.innerText = this.hp;
     this.mpEl = document.getElementById("playerMP");
     this.mpEl.innerText = this.mp;
+    this.playerATK = document.getElementById("playerATK");
+    this.playerATK.innerText = `${this.damage}-${this.maxDamage}`;
+
     this.attackBtn = document.getElementById("attackBtn");
     this.healBtn = document.getElementById("healBtn");
     this.healBtn.disabled = true;
     this.buttons = document.querySelectorAll(".btn");
+
+    this.attacks = [
+      ...Array(2).fill(this.attack),
+      ...Array(1).fill(this.criticalAttack),
+    ];
+    this.currentAttack = null;
+    // console.log(this.attacks);
 
     this.buttons.forEach((button) => {
       button.addEventListener("click", (e) => {
@@ -82,24 +86,27 @@ export class Hero {
 
   heal() {
     if (!this.game.playerTurn) return;
-    const mpcost = 25;
     if (this.hp >= this.maxhp) {
       this.game.playerTurn = true;
       return this.showDialog({ message: `You are already at full health!` });
     }
+
+    const mpcost = 5;
+
     if (this.mp < mpcost) {
       this.game.playerTurn = true;
       return this.showDialog({ message: `You don't have enough MP to heal!` });
     }
-    this.healAudio.currentTime = 0;
-    this.healAudio.play();
+
     this.mp -= mpcost;
-    let heal = 30 + Math.floor(Math.random() * 71);
+    let heal = this.maxhp - this.hp;
     this.hp += heal;
-    // console.log("heal:", heal);
+    console.log("heal:", heal);
+
     if (this.hp > this.maxhp) {
       this.hp = this.maxhp;
     }
+
     this.mpEl.innerText = this.mp;
     this.hpEl.innerText = this.hp;
     this.showDialog({ message: `You healed for ${heal} HP.` });
@@ -108,14 +115,19 @@ export class Hero {
       this.game.enemy.furiousAttack();
     }, 2500);
 
+    this.healAudio.currentTime = 0;
+    this.healAudio.play();
+
     this.game.playerTurn = false;
   }
 
   attack() {
     if (!this.game.playerTurn) return;
     this.game.playerTurn = false;
-    let damage = this.damage + Math.floor(Math.random() * 16);
-    // console.log("attack:", damage);
+    let damage =
+      this.damage +
+      Math.floor(Math.random() * (this.maxDamage - this.damage) + 1);
+    console.log("heroAttack:", damage);
 
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "attack" });
@@ -125,8 +137,8 @@ export class Hero {
   criticalAttack() {
     if (!this.game.playerTurn) return;
     this.game.playerTurn = false;
-    let damage = this.damage * 10 + Math.floor(Math.random() * 101);
-    // console.log("attack:", damage);
+    let damage = this.maxDamage * 5; //+ Math.floor(Math.random() * 101);
+    // console.log("criticalAttack:", damage);
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
     this.showDialog({

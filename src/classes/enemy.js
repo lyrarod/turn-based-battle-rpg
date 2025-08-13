@@ -52,7 +52,7 @@ export class Enemy {
     this.music = new Audio(`musics/${enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.2;
+    this.music.volume = 0.1;
     this.music.play();
   }
 
@@ -81,13 +81,16 @@ export class Enemy {
     this.game.hero.hp += 10;
     this.game.hero.maxhp += 10;
     this.game.hero.hp = this.game.hero.maxhp;
+    this.game.hero.hpEl.innerText = this.game.hero.hp;
 
     this.game.hero.mp += 5;
     this.game.hero.maxmp += 5;
     this.game.hero.mp = this.game.hero.maxmp;
-
     this.game.hero.mpEl.innerText = this.game.hero.mp;
-    this.game.hero.hpEl.innerText = this.game.hero.hp;
+
+    this.game.hero.damage += 1;
+    this.game.hero.maxDamage += 1;
+    this.game.hero.playerATK.innerText = `${this.game.hero.damage}-${this.game.hero.maxDamage}`;
   }
 
   playAudioAttack({ type = "attack" | "furiousAttack" }) {
@@ -98,23 +101,23 @@ export class Enemy {
 
   attack() {
     if (this.game.playerTurn) return;
-    hud.classList.add("animate__animated", "animate__shakeX");
+    hud.classList.add("animate__animated", "animate__shakeY");
 
-    this.playAnimation("attack", { loop: true });
+    this.playAnimation("attack");
     this.playAudioAttack({ type: "attack" });
 
-    let currentDamage = enemies[this.currentEnemy].damage;
-
-    clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.game.playerTurn = true;
-      let damage = currentDamage + Math.floor(Math.random() * 11);
-      this.game.hero.takeDamage(damage);
+      let damage =
+        this.damage +
+        Math.floor(Math.random() * (this.maxDamage - this.damage) + 1);
+      console.log("enemyAttack:", damage);
       this.playAnimation("idle");
+      this.game.hero.takeDamage(damage);
     }, 2000);
 
     hud.addEventListener("animationend", (e) => {
-      e.target.classList.remove("animate__animated", "animate__shakeX");
+      e.target.classList.remove("animate__animated", "animate__shakeY");
     });
   }
 
@@ -125,14 +128,13 @@ export class Enemy {
     this.playAnimation("attack");
     this.playAudioAttack({ type: "attack" });
 
-    clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.game.playerTurn = true;
-      let damage =
-        this.damage + Math.floor(Math.random() * (this.maxDamage - 9));
-      // console.log("furiousAttack:", damage);
-      this.game.hero.takeDamage(damage);
+      let damage = this.maxDamage;
+      console.log("enemyfuriousAttack:", damage);
+
       this.playAnimation("idle");
+      this.game.hero.takeDamage(damage);
     }, 3000);
 
     hud.addEventListener("animationend", (e) => {
@@ -149,8 +151,6 @@ export class Enemy {
       this.defeated = true;
     }
     this.hpEl.innerText = this.hp;
-
-    clearTimeout(this.timer);
 
     if (this.defeated) {
       let nextEnemy = enemies[this.currentEnemy + 1]

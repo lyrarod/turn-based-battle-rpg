@@ -166,13 +166,13 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 1rem 2rem;
   color: #fff;
   background-color: darkblue;
   font-weight: 700;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
   font-size: 2rem;
   text-transform: uppercase;
   z-index: 999;
