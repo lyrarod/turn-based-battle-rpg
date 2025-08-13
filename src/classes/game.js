@@ -16,13 +16,14 @@ export class Game {
     this.canvasEl = document.getElementById("canvas");
 
     this.musics = [
-      new Audio("musics/battle-against-machine.mp3"),
-      new Audio("musics/dark_world.ogg"),
-      new Audio("musics/kraken-of-the-sea.ogg"),
-      new Audio("musics/overworld.ogg"),
+      "musics/battle-against-machine.mp3",
+      "musics/dark_world.ogg",
+      "musics/kraken-of-the-sea.ogg",
+      "musics/overworld.ogg",
     ];
-    this.randomMusic =
-      this.musics[Math.floor(Math.random() * this.musics.length)];
+    this.randomMusic = new Audio(
+      this.musics[Math.floor(Math.random() * this.musics.length)]
+    );
 
     this.lastTime = 0;
   }
@@ -45,12 +46,7 @@ export class Game {
   }
 
   playMusic() {
-    this.randomMusic =
-      this.musics[Math.floor(Math.random() * this.musics.length)];
-    this.randomMusic.currentTime = 0;
-    this.randomMusic.volume = 0.4;
-    this.randomMusic.loop = true;
-    this.randomMusic.play();
+    this.enemy.playMusic();
   }
 
   gameOver() {

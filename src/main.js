@@ -2,8 +2,9 @@ import "animate.css";
 import "./style.css";
 
 import { Game } from "./classes/game";
+import { enemies } from "./classes/state";
 
-let randomImage = () => {
+export let randomImage = () => {
   let images = [
     "bg/battle_bg_0005_01.jpg",
     "bg/battle_bg_0002_03.jpg",
@@ -25,5 +26,5 @@ window.addEventListener("load", () => {
     playBtn.style.display = "none";
   });
 
-  canvas.style.backgroundImage = `url(${randomImage()})`;
+  canvas.style.backgroundImage = `url(${enemies[0].background})`;
 });

@@ -11,18 +11,18 @@ export class Hero {
     this.avatarEl.src = this.icon;
     this.name = "Hero";
 
+    this.attacks = [
+      ...Array(2).fill(this.attack),
+      ...Array(1).fill(this.criticalAttack),
+    ];
+    this.currentAttack = null;
+    // console.log(this.attacks);
+
     this.attackAudios = {
       attack: new Audio("8BClawSlash.wav"),
       criticalAttack: new Audio("2ESwordSlashLong.wav"),
     };
     this.attackAudio = "";
-
-    this.attacks = [
-      ...Array(3).fill(this.attack),
-      ...Array(1).fill(this.criticalAttack),
-    ];
-    this.currentAttack = null;
-    // console.log(this.attacks);
 
     this.hpEl = document.getElementById("playerHP");
     this.hpEl.innerText = this.hp;
@@ -64,7 +64,7 @@ export class Hero {
   }
 
   showDialog(config = { icon: "", message: "" }) {
-    this.removeDialog();
+    this.removeDialog(3000);
     this.dialogIcon.src = config.icon ?? this.icon;
     this.dialogText.innerText = config.message;
     this.dialogEl.style.display = "flex";
@@ -72,12 +72,12 @@ export class Hero {
     this.dialogEl.style.visibility = "visible";
   }
 
-  removeDialog() {
+  removeDialog(timer = 0) {
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.dialogEl.style.opacity = 0;
       this.dialogEl.style.visibility = "hidden";
-    }, 5000);
+    }, timer);
   }
 
   heal() {
@@ -104,7 +104,6 @@ export class Hero {
     this.hpEl.innerText = this.hp;
     this.showDialog({ message: `You healed for ${heal} HP.` });
 
-    clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.game.enemy.furiousAttack();
     }, 2500);
@@ -131,7 +130,7 @@ export class Hero {
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
     this.showDialog({
-      message: `CRITICAL ATTACK! ${this.name} dealt ${damage} damage.`,
+      message: `Critical Attack! ✔ \n ${this.name} dealt ${damage} damage.`,
     });
   }
 

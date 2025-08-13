@@ -1,0 +1,68 @@
+export const enemies = [
+  {
+    music: "battle-against-machine.mp3",
+    background: "bg/battle_bg_0005_01.jpg",
+    name: "Frost Dragon",
+    hp: 300,
+    maxhp: 300,
+    damage: 10,
+    maxDamage: 25,
+    icon: "frost-dragon-icon.png",
+    animations: {
+      idle: {
+        sprite: "frost-dragon-idle.png",
+        width: 1008 / 4,
+        height: 304 / 2,
+        framex: 4,
+        framey: 2,
+      },
+      attack: {
+        sprite: "frost-dragon-attack.png",
+        width: 756 / 3,
+        height: 150 / 1,
+        framex: 3,
+        framey: 1,
+      },
+      hit: {
+        sprite: "frost-dragon-hit.png",
+        width: 252,
+        height: 152,
+        framex: 1,
+        framey: 1,
+      },
+    },
+  },
+  {
+    music: "dark_world.ogg",
+    background: "bg/battle_bg_0002_03.jpg",
+    name: "Diamond Golem",
+    hp: 500,
+    maxhp: 500,
+    damage: 15,
+    maxDamage: 30,
+    icon: "diamond-golem-icon.png",
+    animations: {
+      idle: {
+        sprite: "diamond-golem-idle.png",
+        width: 1008 / 4,
+        height: 304 / 2,
+        framex: 4,
+        framey: 2,
+      },
+      attack: {
+        sprite: "diamond-golem-attack-hit.png",
+        width: 1008 / 4,
+        height: 152,
+        framex: 3,
+        framey: 1,
+      },
+      hit: {
+        sprite: "diamond-golem-attack-hit.png",
+        width: 1008 / 4,
+        height: 152,
+        framex: [3],
+        framey: 1,
+      },
+    },
+  },
+];
