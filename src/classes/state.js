@@ -137,7 +137,7 @@ export const allEnemies = () => {
   return enemies.map((enemy) => {
     return {
       ...enemy,
-      hp: 380,
+      hp: 300,
       maxhp: enemy.maxhp,
       damage: enemy.damage,
       maxDamage: enemy.maxDamage,

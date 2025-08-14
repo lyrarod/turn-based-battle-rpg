@@ -3,7 +3,8 @@ import { allEnemies } from "./state";
 export class Enemy {
   constructor(game) {
     this.game = game;
-    this.currentEnemy = Math.floor(Math.random() * allEnemies().length);
+    this.enemies = allEnemies();
+    this.currentEnemy = 0; //Math.floor(Math.random() * allEnemies().length);
     this.width = 0;
     this.height = 0;
     this.x = 0;
@@ -17,7 +18,6 @@ export class Enemy {
     this.frame = 0;
     this.frameInterval = 1000 / 12;
     this.loop = null;
-    this.enemies = allEnemies();
     this.name = this.enemies[this.currentEnemy].name;
     this.hp = this.enemies[this.currentEnemy].hp;
     this.maxhp = this.enemies[this.currentEnemy].maxhp;
@@ -91,8 +91,8 @@ export class Enemy {
     this.game.hero.hp = this.game.hero.maxhp;
     this.game.hero.hpEl.innerText = this.game.hero.hp;
 
-    this.game.hero.mp += 5;
-    this.game.hero.maxmp += 5;
+    this.game.hero.mp += 1;
+    this.game.hero.maxmp += 1;
     this.game.hero.mp = this.game.hero.maxmp;
     this.game.hero.mpEl.innerText = this.game.hero.mp;
 
@@ -102,7 +102,6 @@ export class Enemy {
 
     this.frameNo = 0;
     hud.style.display = "none";
-    console.clear();
   }
 
   playAudioAttack({ type = "attack" | "furiousAttack" }) {
@@ -153,6 +152,7 @@ export class Enemy {
     }, 3000);
 
     hud.addEventListener("animationend", (e) => {
+      hud.style.removeProperty("--animate-duration", "1.5s");
       e.target.classList.remove("animate__animated", "animate__hinge");
     });
   }
@@ -198,17 +198,20 @@ export class Enemy {
   playAnimation(animation, config = { loop: true }) {
     const currentAnimation =
       this.enemies[this.currentEnemy].animations[animation];
+    this.frame = 0;
+    this.idx = 0;
+    this.idy = 0;
+    this.loop = config.loop;
     this.sprite.src = currentAnimation.sprite;
     this.width = currentAnimation.width;
     this.height = currentAnimation.height;
     this.framex = Array.isArray(currentAnimation.framex)
       ? currentAnimation.framex
-      : Array.from({ length: currentAnimation.framex }, (_, index) => index);
+      : Array.from({ length: currentAnimation.framex }, (_, i) => i);
 
-    this.framey = Array.from({ length: currentAnimation.framey }).map(
-      (_, i) => i
-    );
-    this.loop = config.loop;
+    this.framey = Array.isArray(currentAnimation.framey)
+      ? currentAnimation.framey
+      : Array.from({ length: currentAnimation.framey }, (_, i) => i);
 
     this.x = this.game.width * 0.5 - this.width * 0.5;
     this.y = this.game.height * 0.5 - this.height * 0.5 + 100;
@@ -260,13 +263,15 @@ export class Enemy {
 
     this.frameNo++;
     // console.log(this.frameNo);
-    if (this.frameNo >= 100) {
+    if (this.frameNo >= 60) {
       this.draw();
-      if (this.frameNo === 100) {
+      if (this.frameNo === 60) {
         hud.style.display = "flex";
+        hud.style.pointerEvents = "none";
         hud.classList.add("animate__animated", "animate__backInUp");
       } else {
         hud.addEventListener("animationend", (e) => {
+          hud.style.pointerEvents = "auto";
           e.target.classList.remove("animate__animated", "animate__backInUp");
         });
       }

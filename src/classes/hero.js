@@ -3,10 +3,10 @@ export class Hero {
     this.game = game;
     this.hp = 100;
     this.maxhp = 100;
-    this.mp = 5;
-    this.maxmp = 5;
-    this.damage = 10;
-    this.maxDamage = 20;
+    this.mp = 1;
+    this.maxmp = 1;
+    this.damage = 5;
+    this.maxDamage = 10;
     this.icon = "unit_icon_202000507.png";
     this.avatarEl = document.getElementById("playerAvatar");
     this.avatarEl.src = this.icon;
@@ -91,7 +91,7 @@ export class Hero {
       return this.showDialog({ message: `You are already at full health!` });
     }
 
-    const mpcost = 5;
+    const mpcost = 1;
 
     if (this.mp < mpcost) {
       this.game.playerTurn = true;
