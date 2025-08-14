@@ -3,8 +3,8 @@ export class Hero {
     this.game = game;
     this.hp = 100;
     this.maxhp = 100;
-    this.mp = 10;
-    this.maxmp = 10;
+    this.mp = 5;
+    this.maxmp = 5;
     this.damage = 10;
     this.maxDamage = 20;
     this.icon = "unit_icon_202000507.png";
@@ -31,7 +31,7 @@ export class Hero {
     this.buttons = document.querySelectorAll(".btn");
 
     this.attacks = [
-      ...Array(2).fill(this.attack),
+      ...Array(1).fill(this.attack),
       ...Array(1).fill(this.criticalAttack),
     ];
     this.currentAttack = null;
@@ -101,7 +101,7 @@ export class Hero {
     this.mp -= mpcost;
     let heal = this.maxhp - this.hp;
     this.hp += heal;
-    console.log("heal:", heal);
+    // console.log("heal:", heal);
 
     if (this.hp > this.maxhp) {
       this.hp = this.maxhp;
@@ -127,7 +127,7 @@ export class Hero {
     let damage =
       this.damage +
       Math.floor(Math.random() * (this.maxDamage - this.damage) + 1);
-    console.log("heroAttack:", damage);
+    // console.log("heroAttack:", damage);
 
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "attack" });

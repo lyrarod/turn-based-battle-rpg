@@ -37,13 +37,14 @@ body {
   display: flex;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
 
 #hud {
   position: absolute;
   bottom: 0;
   width: 95%;
-  display: flex;
+  display: none;
   align-items: center;
   column-gap: 1rem;
   padding: 1rem;
@@ -53,8 +54,6 @@ body {
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(2px);
   user-select: none;
-  visibility: hidden;
-  opacity: 0;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
