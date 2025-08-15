@@ -1,12 +1,12 @@
 export class Hero {
   constructor(game) {
     this.game = game;
-    this.hp = 100;
-    this.maxhp = 100;
+    this.hp = 80;
+    this.maxhp = 80;
     this.mp = 1;
     this.maxmp = 1;
-    this.damage = 5;
-    this.maxDamage = 10;
+    this.damage = 3;
+    this.maxDamage = 8;
     this.icon = "unit_icon_202000507.png";
     this.avatarEl = document.getElementById("playerAvatar");
     this.avatarEl.src = this.icon;
@@ -112,7 +112,7 @@ export class Hero {
     this.showDialog({ message: `You healed for ${heal} HP.` });
 
     this.timer = setTimeout(() => {
-      this.game.enemy.furiousAttack();
+      this.game.enemy.randomAttack();
     }, 2500);
 
     this.healAudio.currentTime = 0;

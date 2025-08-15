@@ -4,7 +4,7 @@ export class Enemy {
   constructor(game) {
     this.game = game;
     this.enemies = allEnemies();
-    this.currentEnemy = 0; //Math.floor(Math.random() * allEnemies().length);
+    this.currentEnemy = Math.floor(Math.random() * allEnemies().length);
     this.width = 0;
     this.height = 0;
     this.x = 0;
@@ -15,6 +15,7 @@ export class Enemy {
     this.framey = 0;
     this.sprite = new Image();
     this.sprite.src = "";
+    this.scale = 2;
     this.frame = 0;
     this.frameInterval = 1000 / 12;
     this.loop = null;
@@ -51,6 +52,12 @@ export class Enemy {
     canvas.style.backgroundImage = `url(${
       this.enemies[this.currentEnemy].background
     })`;
+
+    this.attacks = [
+      ...Array(3).fill(this.attack),
+      ...Array(1).fill(this.furiousAttack),
+    ];
+    this.currentAtk = null;
 
     this.frameNo = 0;
   }
@@ -108,6 +115,12 @@ export class Enemy {
     this.attackAudio = this.attackAudios[type];
     this.attackAudio.currentTime = 0;
     this.attackAudio.play();
+  }
+
+  randomAttack() {
+    this.currentAttack =
+      this.attacks[Math.floor(Math.random() * this.attacks.length)];
+    this.currentAttack();
   }
 
   attack() {
@@ -191,7 +204,7 @@ export class Enemy {
     }, 1500);
 
     this.timer = setTimeout(() => {
-      this.attack();
+      this.randomAttack();
     }, 4000);
   }
 
@@ -213,8 +226,8 @@ export class Enemy {
       ? currentAnimation.framey
       : Array.from({ length: currentAnimation.framey }, (_, i) => i);
 
-    this.x = this.game.width * 0.5 - this.width * 0.5;
-    this.y = this.game.height * 0.5 - this.height * 0.5 + 100;
+    this.x = this.game.width * 0.5 - this.width * 0.5 * this.scale;
+    this.y = this.game.height * 0.5 - this.height * 0.5 * this.scale;
   }
 
   draw() {
@@ -228,8 +241,8 @@ export class Enemy {
       this.height,
       this.x,
       this.y,
-      this.width,
-      this.height
+      this.width * this.scale,
+      this.height * this.scale
     );
 
     // this.game.ctx.strokeStyle = "white";
