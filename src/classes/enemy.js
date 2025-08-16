@@ -117,7 +117,7 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 1;
+    this.music.volume = 0.25;
     this.music.play().catch((error) => console.log(error));
   }
 
