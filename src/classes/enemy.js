@@ -194,7 +194,7 @@ export class Enemy {
     hud.classList.add("animate__animated", "animate__hinge");
 
     this.playAnimation("attack");
-    this.playAudioAttack({ type: "furiousAttack" });
+    this.playAudioAttack({ type: "attack" });
 
     this.timer = setTimeout(() => {
       this.game.playerTurn = true;
