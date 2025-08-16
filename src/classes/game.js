@@ -4,6 +4,7 @@ import { Enemy } from "./enemy";
 export class Game {
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
+    this.ctx.imageSmoothingEnabled = false;
     this.width = canvas.width;
     this.height = canvas.height;
     this.playerTurn = true;
