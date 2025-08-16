@@ -36,9 +36,10 @@ export class Game {
         this.count++;
       };
 
-      asset.oncanplay = () => {
+      asset.oncanplay = async () => {
         this.count++;
         if (this.count === this.assets.length) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           this.loaded = true;
           playBtn.disabled = false;
           playBtn.innerText = "Play Now";
