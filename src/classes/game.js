@@ -10,6 +10,7 @@ export class Game {
     this.playerTurn = true;
     this.enemy = new Enemy(this);
     this.hero = new Hero(this);
+    this.lastTime = 0;
 
     this.gameObjects = [this.enemy, this.hero];
 
@@ -26,10 +27,32 @@ export class Game {
       this.musics[Math.floor(Math.random() * this.musics.length)]
     );
 
-    this.lastTime = 0;
+    this.count = 0;
+    this.loaded = false;
+    this.assets = [...this.enemy.assets];
+
+    this.assets.forEach((asset, i) => {
+      asset.onload = () => {
+        this.count++;
+      };
+
+      asset.oncanplay = () => {
+        this.count++;
+        if (this.count === this.assets.length) {
+          this.loaded = true;
+          playBtn.disabled = false;
+          playBtn.innerText = "Play Now";
+        }
+      };
+
+      asset.onerror = () => {
+        console.error(`Asset ${i} failed to load: `, asset);
+      };
+    });
   }
 
   update(deltaTime) {
+    if (!this.loaded) return;
     this.gameObjects.forEach((gameObject) => gameObject.update(deltaTime));
   }
 
@@ -44,6 +67,7 @@ export class Game {
 
   init() {
     this.loop();
+    this.playMusic();
   }
 
   playMusic() {

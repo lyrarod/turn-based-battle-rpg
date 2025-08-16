@@ -1,15 +1,17 @@
-import "animate.css";
 import "./style.css";
+import "animate.css";
 
 import { Game } from "./classes/game";
+
+playBtn.disabled = true;
+playBtn.innerText = "Loading...";
 
 window.addEventListener("load", () => {
   const canvas = document.getElementById("canvas");
   const game = new Game(canvas);
 
-  playBtn.addEventListener("click", () => {
+  playBtn.addEventListener("click", (e) => {
     game.init();
-    game.playMusic();
-    playBtn.style.display = "none";
+    e.target.style.display = "none";
   });
 });

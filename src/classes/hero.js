@@ -61,7 +61,7 @@ export class Hero {
     this.healAudio = new Audio("7DHealingSound.wav");
   }
 
-  playAudioAttack({ type = "attack" | "criticalAttack" }) {
+  playAudioAttack({ type = "attack" | "criticalAttack" } = { type: "attack" }) {
     this.attackAudio = this.attackAudios[type];
     this.attackAudio.currentTime = 0;
     this.attackAudio.play();

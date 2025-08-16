@@ -13,7 +13,6 @@ export class Enemy {
     this.framex = 0;
     this.idy = 0;
     this.framey = 0;
-
     this.scale = 3;
     this.frame = 0;
     this.frameInterval = 1000 / 12;
@@ -44,11 +43,24 @@ export class Enemy {
     this.defeated = false;
     this.timer = null;
 
-    this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
+    this.music = new Audio(`/musics/${this.enemies[this.currentEnemy].music}`);
 
-    canvas.style.backgroundImage = `url(${
-      this.enemies[this.currentEnemy].background
-    })`;
+    this.bgImage = new Image();
+    this.bgImage.src = this.enemies[this.currentEnemy].background;
+    canvas.style.backgroundImage = `url(${this.bgImage.src})`;
+
+    this.sprites = {
+      idle: new Image(),
+      hit: new Image(),
+      attack: new Image(),
+    };
+
+    this.sprites["idle"].src =
+      this.enemies[this.currentEnemy].animations.idle.sprite;
+    this.sprites["hit"].src =
+      this.enemies[this.currentEnemy].animations.attack.sprite;
+    this.sprites["attack"].src =
+      this.enemies[this.currentEnemy].animations.attack.sprite;
 
     this.attacks = [
       ...Array(2).fill(this.attack),
@@ -57,24 +69,27 @@ export class Enemy {
     this.currentAtk = null;
 
     this.frameNo = 0;
-
-    this.sprites = {
-      idle: new Image(),
-      hit: new Image(),
-      attack: new Image(),
-    };
-    this.sprites["idle"].src =
-      this.enemies[this.currentEnemy].animations.idle.sprite;
-    this.sprites["hit"].src =
-      this.enemies[this.currentEnemy].animations.attack.sprite;
-    this.sprites["attack"].src =
-      this.enemies[this.currentEnemy].animations.attack.sprite;
-
     this.animation = "idle";
     this.playAnimation();
+
+    this.assets = [
+      this.sprites["idle"],
+      this.sprites["hit"],
+      this.sprites["attack"],
+      this.music,
+      this.attackAudios.attack,
+      this.attackAudios.furiousAttack,
+      this.bgImage,
+      this.avatarEl,
+    ];
   }
 
-  playAnimation(animation = "idle", config = { loop: true }) {
+  playAnimation(
+    animation = "idle",
+    { loop = true | false } = {
+      loop: true,
+    }
+  ) {
     this.animation = animation;
     const currentAnimation =
       this.enemies[this.currentEnemy].animations[animation];
@@ -82,7 +97,7 @@ export class Enemy {
     this.idx = 0;
     this.idy = 0;
     this.frame = 0;
-    this.loop = config.loop;
+    this.loop = loop;
 
     this.width = currentAnimation.width;
     this.height = currentAnimation.height;
@@ -99,12 +114,11 @@ export class Enemy {
   }
 
   playMusic() {
-    this.music.src = "";
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.25;
-    this.music.play();
+    this.music.volume = 1;
+    this.music.play().catch((error) => console.log(error));
   }
 
   nextEnemy() {
@@ -129,12 +143,14 @@ export class Enemy {
 
     this.defeated = false;
     this.game.playerTurn = true;
-    this.game.hero.removeDialog();
-    this.playAnimation();
+
+    this.music.src = "";
     this.playMusic();
-    canvas.style.backgroundImage = `url(${
-      this.enemies[this.currentEnemy].background
-    })`;
+
+    this.playAnimation();
+
+    this.bgImage.src = this.enemies[this.currentEnemy].background;
+    canvas.style.backgroundImage = `url(${this.bgImage.src})`;
 
     this.game.hero.hp += 10;
     // this.game.hero.maxhp += 10;
