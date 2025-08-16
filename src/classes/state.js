@@ -207,13 +207,13 @@ export const allEnemies = () => {
       ...enemy,
       slug,
       icon: `enemies/${slug}/${slug}-icon.png`,
-      hp: 160,
-      maxhp: 160,
+      hp: 200,
+      maxhp: 200,
       damage: 6,
       maxDamage: 12,
       background: `enemies/${slug}/${slug}-battle_bg.jpg`,
       animations: {
-        // ...enemy.animations,
+        ...enemy.animations,
         idle: {
           ...enemy.animations.idle,
           sprite: `enemies/${slug}/${slug}-idle.png`,
@@ -237,8 +237,6 @@ export const allEnemies = () => {
     };
   });
 };
-
-console.log(allEnemies());
 
 export function generateSlug(text) {
   return text

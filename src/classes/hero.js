@@ -10,7 +10,7 @@ export class Hero {
     this.icon = "unit_icon_202000507.png";
     this.avatarEl = document.getElementById("playerAvatar");
     this.avatarEl.src = this.icon;
-    this.name = "Hero";
+    this.name = "Emperor";
 
     this.attackAudios = {
       attack: new Audio("8BClawSlash.wav"),
@@ -67,10 +67,18 @@ export class Hero {
     this.attackAudio.play();
   }
 
-  showDialog(config = { icon: "", message: "" }) {
-    this.removeDialog(3000);
-    this.dialogIcon.src = config.icon ?? this.icon;
-    this.dialogText.innerText = config.message;
+  showDialog({ icon = this.icon, message = "" }) {
+    this.dialogEl.addEventListener("click", () => {
+      if (this.game.enemy.defeated) {
+        this.game.enemy.nextEnemy();
+      } else {
+        this.dialogEl.style.opacity = 0;
+        this.dialogEl.style.visibility = "hidden";
+      }
+    });
+
+    this.dialogIcon.src = icon;
+    this.dialogText.innerText = message;
     this.dialogEl.style.display = "flex";
     this.dialogEl.style.opacity = 1;
     this.dialogEl.style.visibility = "visible";
@@ -131,19 +139,37 @@ export class Hero {
 
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "attack" });
-    this.showDialog({ message: `${this.name} dealt ${damage} damage.` });
+
+    let message = `${this.name} dealt ${damage} damage.`;
+
+    if (this.game.enemy.defeated) {
+      let nextEnemy = this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
+        ? this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
+        : this.game.enemy.enemies[0];
+
+      message = `${this.name} dealt ${damage} damage.\nYou defeated ${this.game.enemy.name}\nYou next enemy is ${nextEnemy.name}`;
+    }
+    this.showDialog({ message });
   }
 
   criticalAttack() {
     if (!this.game.playerTurn) return;
     this.game.playerTurn = false;
-    let damage = this.maxDamage * 5; //+ Math.floor(Math.random() * 101);
+    let damage = this.maxDamage * 3; //+ Math.floor(Math.random() * 101);
     // console.log("criticalAttack:", damage);
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
-    this.showDialog({
-      message: `Critical Attack! ✔ \n ${this.name} dealt ${damage} damage.`,
-    });
+
+    let message = `Critical Attack! ✔ \n ${this.name} dealt ${damage} damage.`;
+
+    if (this.game.enemy.defeated) {
+      let nextEnemy = this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
+        ? this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
+        : this.game.enemy.enemies[0];
+
+      message = `${this.name} dealt ${damage} damage.\nYou defeated ${this.game.enemy.name}\nYou next enemy is ${nextEnemy.name}`;
+    }
+    this.showDialog({ message });
   }
 
   takeDamage(damage) {

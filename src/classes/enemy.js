@@ -14,8 +14,7 @@ export class Enemy {
     this.idy = 0;
     this.framey = 0;
     this.sprite = new Image();
-    this.sprite.src = "";
-    this.scale = 2;
+    this.scale = 3;
     this.frame = 0;
     this.frameInterval = 1000 / 12;
     this.loop = null;
@@ -38,12 +37,11 @@ export class Enemy {
       attack: new Audio("33HitFist.wav"),
       furiousAttack: new Audio("Dragon_Attack_2.mp3"),
     };
-    this.attackAudio = "";
+    this.attackAudio = null;
 
     this.animations = {};
 
     this.defeated = false;
-    this.isAttacking = false;
     this.timer = null;
 
     this.playAnimation("idle");
@@ -54,12 +52,35 @@ export class Enemy {
     })`;
 
     this.attacks = [
-      ...Array(3).fill(this.attack),
+      ...Array(2).fill(this.attack),
       ...Array(1).fill(this.furiousAttack),
     ];
     this.currentAtk = null;
 
     this.frameNo = 0;
+  }
+
+  playAnimation(animation = "idle", config = { loop: true }) {
+    const currentAnimation =
+      this.enemies[this.currentEnemy].animations[animation];
+
+    this.idx = 0;
+    this.idy = 0;
+    this.frame = 0;
+    this.loop = config.loop;
+    this.sprite.src = currentAnimation.sprite;
+    this.width = currentAnimation.width;
+    this.height = currentAnimation.height;
+    this.framex = Array.isArray(currentAnimation.framex)
+      ? currentAnimation.framex
+      : Array.from({ length: currentAnimation.framex }, (_, i) => i);
+
+    this.framey = Array.isArray(currentAnimation.framey)
+      ? currentAnimation.framey
+      : Array.from({ length: currentAnimation.framey }, (_, i) => i);
+
+    this.x = this.game.width * 0.5 - this.width * 0.5 * this.scale;
+    this.y = this.game.height * 0.5 - this.height * 0.5 * this.scale;
   }
 
   playMusic() {
@@ -94,13 +115,13 @@ export class Enemy {
     })`;
 
     this.game.hero.hp += 10;
-    this.game.hero.maxhp += 10;
-    this.game.hero.hp = this.game.hero.maxhp;
+    // this.game.hero.maxhp += 10;
+    // this.game.hero.hp = this.game.hero.maxhp;
     this.game.hero.hpEl.innerText = this.game.hero.hp;
 
     this.game.hero.mp += 1;
-    this.game.hero.maxmp += 1;
-    this.game.hero.mp = this.game.hero.maxmp;
+    // this.game.hero.maxmp += 1;
+    // this.game.hero.mp = this.game.hero.maxmp;
     this.game.hero.mpEl.innerText = this.game.hero.mp;
 
     this.game.hero.damage += 1;
@@ -125,11 +146,10 @@ export class Enemy {
 
   attack() {
     if (this.game.playerTurn) return;
-    this.isAttacking = true;
-    hud.classList.add("animate__animated", "animate__shakeY");
 
-    this.playAnimation("attack", { loop: false });
     this.playAudioAttack({ type: "attack" });
+    this.playAnimation("attack", { loop: false });
+    hud.classList.add("animate__animated", "animate__shakeY");
 
     this.timer = setTimeout(() => {
       this.game.playerTurn = true;
@@ -148,18 +168,16 @@ export class Enemy {
 
   furiousAttack() {
     if (this.game.playerTurn) return;
-    this.isAttacking = true;
     hud.style.setProperty("--animate-duration", "1.5s");
     hud.classList.add("animate__animated", "animate__hinge");
 
     this.playAnimation("attack");
-    this.playAudioAttack({ type: "attack" });
+    this.playAudioAttack({ type: "furiousAttack" });
 
     this.timer = setTimeout(() => {
       this.game.playerTurn = true;
       let damage = this.maxDamage;
       // console.log("enemyfuriousAttack:", damage);
-
       this.playAnimation("idle");
       this.game.hero.takeDamage(damage);
     }, 3000);
@@ -185,16 +203,16 @@ export class Enemy {
         ? this.enemies[this.currentEnemy + 1]
         : this.enemies[0];
 
-      this.timer = setTimeout(() => {
-        alert(
-          `You Won! 🎉 \nYou defeated ${this.name}\nYou next enemy is ${nextEnemy.name}`
-        );
+      // this.timer = setTimeout(() => {
+      //   alert(
+      //     `You Won! 🎉 \nYou defeated ${this.name}\nYou next enemy is ${nextEnemy.name}`
+      //   );
 
-        this.timer = setTimeout(() => {
-          this.nextEnemy();
-        }, 1000);
-        // location.reload();
-      }, 1500);
+      //   this.timer = setTimeout(() => {
+      //     this.nextEnemy();
+      //   }, 1000);
+      //   // location.reload();
+      // }, 1500);
 
       return null;
     }
@@ -206,28 +224,6 @@ export class Enemy {
     this.timer = setTimeout(() => {
       this.randomAttack();
     }, 4000);
-  }
-
-  playAnimation(animation, config = { loop: true }) {
-    const currentAnimation =
-      this.enemies[this.currentEnemy].animations[animation];
-    this.frame = 0;
-    this.idx = 0;
-    this.idy = 0;
-    this.loop = config.loop;
-    this.sprite.src = currentAnimation.sprite;
-    this.width = currentAnimation.width;
-    this.height = currentAnimation.height;
-    this.framex = Array.isArray(currentAnimation.framex)
-      ? currentAnimation.framex
-      : Array.from({ length: currentAnimation.framex }, (_, i) => i);
-
-    this.framey = Array.isArray(currentAnimation.framey)
-      ? currentAnimation.framey
-      : Array.from({ length: currentAnimation.framey }, (_, i) => i);
-
-    this.x = this.game.width * 0.5 - this.width * 0.5 * this.scale;
-    this.y = this.game.height * 0.5 - this.height * 0.5 * this.scale;
   }
 
   draw() {
