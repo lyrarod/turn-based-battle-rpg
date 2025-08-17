@@ -1,8 +1,8 @@
 export class Hero {
   constructor(game) {
     this.game = game;
-    this.hp = 80;
-    this.maxhp = 80;
+    this.hp = 100;
+    this.maxhp = 100;
     this.mp = 1;
     this.maxmp = 1;
     this.damage = 5;
@@ -12,11 +12,11 @@ export class Hero {
     this.avatarEl.src = this.icon;
     this.name = "Emperor";
 
+    this.attackAudio = "";
     this.attackAudios = {
       attack: new Audio("8BClawSlash.wav"),
       criticalAttack: new Audio("2ESwordSlashLong.wav"),
     };
-    this.attackAudio = "";
 
     this.hpEl = document.getElementById("playerHP");
     this.hpEl.innerText = this.hp;
@@ -30,11 +30,11 @@ export class Hero {
     this.healBtn.disabled = true;
     this.buttons = document.querySelectorAll(".btn");
 
+    this.currentAttack = null;
     this.attacks = [
       ...Array(1).fill(this.attack),
       ...Array(1).fill(this.criticalAttack),
     ];
-    this.currentAttack = null;
     // console.log(this.attacks);
 
     this.buttons.forEach((button) => {
@@ -117,8 +117,8 @@ export class Hero {
     this.playAudioAttack({ type: "attack" });
 
     let message = "";
-    message = `${this.name} attacked!\n`;
-    message += `${this.game.enemy.name} took ${damage} damage.`;
+    message = `<strong><em>${this.name}</em></strong> has Attacked!💢<br/>`;
+    message += `${this.game.enemy.name} took ${damage} damage...`;
 
     if (this.game.enemy.defeated) return;
 
@@ -133,8 +133,8 @@ export class Hero {
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
 
-    let message = `Critical Attack! ✔\n`;
-    message += `${this.game.enemy.name} took ${damage} damage.`;
+    let message = `<strong><em>${this.name}</em></strong> landed a <strong>CRITICAL HIT</strong>!💢<br/>`;
+    message += `${this.game.enemy.name} took ${damage} damage..`;
 
     if (this.game.enemy.defeated) return;
 
@@ -152,18 +152,23 @@ export class Hero {
     }
     this.hpEl.innerText = this.hp;
 
-    this.game.showDialog({
-      icon: this.game.enemy.icon,
-      message: `${this.game.enemy.name} dealt ${damage} damage.`,
-    });
+    let message = "";
+
+    message = `<strong><em>${this.game.enemy.name}</em></strong> has Attacked!💢<br/>`;
+    message += `${this.name} took ${damage} damage...`;
 
     if (this.isDead) {
-      setTimeout(() => {
-        this.game.gameOver();
-      }, 1000);
+      message = `<strong><em>${this.game.enemy.name}</em></strong> has won the battle!<br/>`;
+      message += `${this.name} took ${damage} damage...<br/>`;
 
-      return null;
+      // this.game.stopMusic();
+      return this.game.showDialog({ icon: this.game.enemy.icon, message });
     }
+
+    return this.game.showDialog({
+      icon: this.game.enemy.icon,
+      message,
+    });
   }
 
   update() {

@@ -56,7 +56,7 @@ body {
   backdrop-filter: blur(4px);
   user-select: none;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-family: monospace;
 }
 
@@ -168,7 +168,14 @@ body {
   color: #fff;
   user-select: none;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  font-family: monospace;
+}
+@media (min-width: 600px) {
+  #dialog {
+    font-size: 0.875rem;
+  }
 }
 
 #playBtn {

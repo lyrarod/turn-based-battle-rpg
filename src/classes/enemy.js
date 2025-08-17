@@ -32,11 +32,11 @@ export class Enemy {
     this.enemyATK = document.getElementById("enemyATK");
     this.enemyATK.innerText = `${this.damage}-${this.maxDamage}`;
 
+    this.attackAudio = null;
     this.attackAudios = {
       attack: new Audio("33HitFist.wav"),
       furiousAttack: new Audio("Dragon_Attack_2.mp3"),
     };
-    this.attackAudio = null;
 
     this.animations = {};
 
@@ -62,11 +62,11 @@ export class Enemy {
     this.sprites["attack"].src =
       this.enemies[this.currentEnemy].animations.attack.sprite;
 
+    this.currentAtk = null;
     this.attacks = [
       ...Array(2).fill(this.attack),
       ...Array(1).fill(this.furiousAttack),
     ];
-    this.currentAtk = null;
 
     this.frameNo = 0;
     this.animation = "idle";
@@ -117,7 +117,7 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.25;
+    this.music.volume = 1;
     this.music.play().catch((error) => console.log(error));
   }
 
@@ -142,10 +142,6 @@ export class Enemy {
     this.sprites["attack"].src =
       this.enemies[this.currentEnemy].animations.attack.sprite;
 
-    this.avatarEl.src = this.icon;
-    this.hpEl.innerText = this.hp;
-    this.enemyATK.innerText = `${this.damage}-${this.maxDamage}`;
-
     this.defeated = false;
     this.game.playerTurn = true;
 
@@ -157,14 +153,25 @@ export class Enemy {
     this.bgImage.src = this.enemies[this.currentEnemy].background;
     canvas.style.backgroundImage = `url(${this.bgImage.src})`;
 
+    this.avatarEl.src = this.icon;
+
+    this.hp += 20;
+    this.maxhp += 20;
+    this.hp = this.maxhp;
+    this.hpEl.innerText = this.hp;
+
+    this.damage += 5;
+    this.maxDamage += 5;
+    this.enemyATK.innerText = `${this.damage}-${this.maxDamage}`;
+
     this.game.hero.hp += 10;
-    // this.game.hero.maxhp += 10;
-    // this.game.hero.hp = this.game.hero.maxhp;
+    this.game.hero.maxhp += 10;
+    this.game.hero.hp = this.game.hero.maxhp;
     this.game.hero.hpEl.innerText = this.game.hero.hp;
 
     this.game.hero.mp += 1;
-    // this.game.hero.maxmp += 1;
-    // this.game.hero.mp = this.game.hero.maxmp;
+    this.game.hero.maxmp += 0.5;
+    this.game.hero.mp = this.game.hero.maxmp;
     this.game.hero.mpEl.innerText = this.game.hero.mp;
 
     this.game.hero.damage += 1;
@@ -200,8 +207,8 @@ export class Enemy {
         this.damage +
         Math.floor(Math.random() * (this.maxDamage - this.damage) + 1);
       // console.log("enemyAttack:", damage);
-      this.game.hero.takeDamage(damage);
       this.playAnimation("idle");
+      this.game.hero.takeDamage(damage);
     }, 2000);
 
     hud.addEventListener("animationend", (e) => {
@@ -221,8 +228,8 @@ export class Enemy {
       this.game.playerTurn = true;
       let damage = this.maxDamage;
       // console.log("enemyfuriousAttack:", damage);
-      this.game.hero.takeDamage(damage);
       this.playAnimation("idle");
+      this.game.hero.takeDamage(damage);
     }, 3000);
 
     hud.addEventListener("animationend", (e) => {
@@ -248,14 +255,12 @@ export class Enemy {
         ? this.enemies[this.currentEnemy + 1]
         : this.enemies[0];
 
-      message = `${this.game.hero.name} dealt ${damage} damage.\n`;
+      message = `<strong><em>${this.game.hero.name}</em></strong> defeated ${this.name}!💥<br/>
+        ${this.name} took ${damage} damage...<br/>
+        You next enemy is ${nextEnemy.name}.`;
 
-      message += `You defeated ${this.name}\nYou next enemy is ${nextEnemy.name}`;
-
-      // this.game.removeDialog();
-      this.game.showDialog({ message });
       this.stopMusic();
-      return null;
+      return this.game.showDialog({ message });
     }
 
     this.timer = setTimeout(() => {

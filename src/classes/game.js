@@ -76,6 +76,10 @@ export class Game {
     this.enemy.playMusic();
   }
 
+  stopMusic() {
+    this.enemy.stopMusic();
+  }
+
   gameOver() {
     alert("😱 Game Over... \n You lost \n Try Again.");
     location.reload();
@@ -85,14 +89,20 @@ export class Game {
     dialog.addEventListener("click", () => {
       if (this.enemy.defeated) {
         this.removeDialog();
-        this.enemy.nextEnemy();
+        return this.enemy.nextEnemy();
       }
+
+      if (this.hero.isDead) {
+        this.removeDialog();
+        return location.reload();
+      }
+
       this.removeDialog(100);
     });
 
     dialog.style.display = "flex";
     dialogIcon.src = icon;
-    dialogText.innerText = message;
+    dialogText.innerHTML = message;
   }
 
   removeDialog(timer = 0) {
