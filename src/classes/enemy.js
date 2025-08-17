@@ -13,7 +13,7 @@ export class Enemy {
     this.framex = 0;
     this.idy = 0;
     this.framey = 0;
-    this.scale = 3;
+    this.scale = 2;
     this.frame = 0;
     this.frameInterval = 1000 / 12;
     this.loop = null;
@@ -121,6 +121,11 @@ export class Enemy {
     this.music.play().catch((error) => console.log(error));
   }
 
+  stopMusic() {
+    this.music.pause();
+    this.music.currentTime = 0;
+  }
+
   nextEnemy() {
     this.currentEnemy = (this.currentEnemy + 1) % this.enemies.length;
     this.name = this.enemies[this.currentEnemy].name;
@@ -195,8 +200,8 @@ export class Enemy {
         this.damage +
         Math.floor(Math.random() * (this.maxDamage - this.damage) + 1);
       // console.log("enemyAttack:", damage);
-      this.playAnimation("idle");
       this.game.hero.takeDamage(damage);
+      this.playAnimation("idle");
     }, 2000);
 
     hud.addEventListener("animationend", (e) => {
@@ -216,8 +221,8 @@ export class Enemy {
       this.game.playerTurn = true;
       let damage = this.maxDamage;
       // console.log("enemyfuriousAttack:", damage);
-      this.playAnimation("idle");
       this.game.hero.takeDamage(damage);
+      this.playAnimation("idle");
     }, 3000);
 
     hud.addEventListener("animationend", (e) => {
@@ -236,22 +241,20 @@ export class Enemy {
     }
     this.hpEl.innerText = this.hp;
 
+    let message = "";
+
     if (this.defeated) {
       let nextEnemy = this.enemies[this.currentEnemy + 1]
         ? this.enemies[this.currentEnemy + 1]
         : this.enemies[0];
 
-      // this.timer = setTimeout(() => {
-      //   alert(
-      //     `You Won! 🎉 \nYou defeated ${this.name}\nYou next enemy is ${nextEnemy.name}`
-      //   );
+      message = `${this.game.hero.name} dealt ${damage} damage.\n`;
 
-      //   this.timer = setTimeout(() => {
-      //     this.nextEnemy();
-      //   }, 1000);
-      //   // location.reload();
-      // }, 1500);
+      message += `You defeated ${this.name}\nYou next enemy is ${nextEnemy.name}`;
 
+      // this.game.removeDialog();
+      this.game.showDialog({ message });
+      this.stopMusic();
       return null;
     }
 
@@ -265,7 +268,7 @@ export class Enemy {
   }
 
   draw() {
-    if (!this.game.ctx) return;
+    if (!this.game.ctx || this.defeated) return;
 
     this.game.ctx.drawImage(
       this.sprites[this.animation],

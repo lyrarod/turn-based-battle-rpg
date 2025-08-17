@@ -3,7 +3,6 @@ import "animate.css";
 
 import { Game } from "./classes/game";
 
-playBtn.disabled = true;
 playBtn.innerText = "Loading...";
 
 window.addEventListener("load", () => {

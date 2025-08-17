@@ -5,9 +5,9 @@ export class Hero {
     this.maxhp = 80;
     this.mp = 1;
     this.maxmp = 1;
-    this.damage = 3;
-    this.maxDamage = 8;
-    this.icon = "unit_icon_202000507.png";
+    this.damage = 5;
+    this.maxDamage = 10;
+    this.icon = "/unit_icon_202000507.png";
     this.avatarEl = document.getElementById("playerAvatar");
     this.avatarEl.src = this.icon;
     this.name = "Emperor";
@@ -52,10 +52,6 @@ export class Hero {
       });
     });
 
-    this.dialogEl = document.getElementById("dialog");
-    this.dialogText = document.getElementById("dialogText");
-    this.dialogIcon = document.getElementById("dialogIcon");
-    this.timer = null;
     this.isDead = false;
 
     this.healAudio = new Audio("7DHealingSound.wav");
@@ -67,43 +63,23 @@ export class Hero {
     this.attackAudio.play();
   }
 
-  showDialog({ icon = this.icon, message = "" }) {
-    this.dialogEl.addEventListener("click", () => {
-      if (this.game.enemy.defeated) {
-        this.game.enemy.nextEnemy();
-      } else {
-        this.dialogEl.style.opacity = 0;
-        this.dialogEl.style.visibility = "hidden";
-      }
-    });
-
-    this.dialogIcon.src = icon;
-    this.dialogText.innerText = message;
-    this.dialogEl.style.display = "flex";
-    this.dialogEl.style.opacity = 1;
-    this.dialogEl.style.visibility = "visible";
-  }
-
-  removeDialog(timer = 0) {
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.dialogEl.style.opacity = 0;
-      this.dialogEl.style.visibility = "hidden";
-    }, timer);
-  }
-
   heal() {
     if (!this.game.playerTurn) return;
     if (this.hp >= this.maxhp) {
       this.game.playerTurn = true;
-      return this.showDialog({ message: `You are already at full health!` });
+      return this.game.showDialog({
+        icon: this.icon,
+        message: `You are already at full health!`,
+      });
     }
 
     const mpcost = 1;
 
     if (this.mp < mpcost) {
       this.game.playerTurn = true;
-      return this.showDialog({ message: `You don't have enough MP to heal!` });
+      return this.game.showDialog({
+        message: `You don't have enough MP to heal!`,
+      });
     }
 
     this.mp -= mpcost;
@@ -117,11 +93,11 @@ export class Hero {
 
     this.mpEl.innerText = this.mp;
     this.hpEl.innerText = this.hp;
-    this.showDialog({ message: `You healed for ${heal} HP.` });
+    this.game.showDialog({ message: `You healed for ${heal} HP.` });
 
     this.timer = setTimeout(() => {
       this.game.enemy.randomAttack();
-    }, 2500);
+    }, 3000);
 
     this.healAudio.currentTime = 0;
     this.healAudio.play();
@@ -140,36 +116,29 @@ export class Hero {
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "attack" });
 
-    let message = `${this.name} dealt ${damage} damage.`;
+    let message = "";
+    message = `${this.name} attacked!\n`;
+    message += `${this.game.enemy.name} took ${damage} damage.`;
 
-    if (this.game.enemy.defeated) {
-      let nextEnemy = this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
-        ? this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
-        : this.game.enemy.enemies[0];
+    if (this.game.enemy.defeated) return;
 
-      message = `${this.name} dealt ${damage} damage.\nYou defeated ${this.game.enemy.name}\nYou next enemy is ${nextEnemy.name}`;
-    }
-    this.showDialog({ message });
+    return this.game.showDialog({ message });
   }
 
   criticalAttack() {
     if (!this.game.playerTurn) return;
     this.game.playerTurn = false;
-    let damage = this.maxDamage * 3; //+ Math.floor(Math.random() * 101);
+    let damage = this.maxDamage * 5; //+ Math.floor(Math.random() * 101);
     // console.log("criticalAttack:", damage);
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
 
-    let message = `Critical Attack! ✔ \n ${this.name} dealt ${damage} damage.`;
+    let message = `Critical Attack! ✔\n`;
+    message += `${this.game.enemy.name} took ${damage} damage.`;
 
-    if (this.game.enemy.defeated) {
-      let nextEnemy = this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
-        ? this.game.enemy.enemies[this.game.enemy.currentEnemy + 1]
-        : this.game.enemy.enemies[0];
+    if (this.game.enemy.defeated) return;
 
-      message = `${this.name} dealt ${damage} damage.\nYou defeated ${this.game.enemy.name}\nYou next enemy is ${nextEnemy.name}`;
-    }
-    this.showDialog({ message });
+    return this.game.showDialog({ message });
   }
 
   takeDamage(damage) {
@@ -183,7 +152,7 @@ export class Hero {
     }
     this.hpEl.innerText = this.hp;
 
-    this.showDialog({
+    this.game.showDialog({
       icon: this.game.enemy.icon,
       message: `${this.game.enemy.name} dealt ${damage} damage.`,
     });

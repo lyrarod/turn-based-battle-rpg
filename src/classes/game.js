@@ -11,6 +11,7 @@ export class Game {
     this.enemy = new Enemy(this);
     this.hero = new Hero(this);
     this.lastTime = 0;
+    this.timer = null;
 
     this.gameObjects = [this.enemy, this.hero];
 
@@ -42,7 +43,7 @@ export class Game {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           this.loaded = true;
           playBtn.disabled = false;
-          playBtn.innerText = "Play Now";
+          playBtn.innerText = "Play Now!";
         }
       };
 
@@ -78,5 +79,25 @@ export class Game {
   gameOver() {
     alert("😱 Game Over... \n You lost \n Try Again.");
     location.reload();
+  }
+
+  showDialog({ icon = this.hero.icon, message = "" }) {
+    dialog.addEventListener("click", () => {
+      if (this.enemy.defeated) {
+        this.removeDialog();
+        this.enemy.nextEnemy();
+      }
+      this.removeDialog(100);
+    });
+
+    dialog.style.display = "flex";
+    dialogIcon.src = icon;
+    dialogText.innerText = message;
+  }
+
+  removeDialog(timer = 0) {
+    this.timer = setTimeout(() => {
+      dialog.style.display = "none";
+    }, timer);
   }
 }
