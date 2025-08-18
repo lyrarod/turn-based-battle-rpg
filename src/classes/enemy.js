@@ -4,7 +4,7 @@ export class Enemy {
   constructor(game) {
     this.game = game;
     this.enemies = allEnemies();
-    this.currentEnemy = 0; //Math.floor(Math.random() * allEnemies().length);
+    this.currentEnemy = Math.floor(Math.random() * allEnemies().length);
     this.width = 0;
     this.height = 0;
     this.x = 0;
@@ -117,7 +117,7 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 1;
+    this.music.volume = 0.1;
     this.music.play().catch((error) => console.log(error));
   }
 
@@ -169,14 +169,15 @@ export class Enemy {
     this.game.hero.hp = this.game.hero.maxhp;
     this.game.hero.hpEl.innerText = this.game.hero.hp;
 
-    this.game.hero.mp += 1;
-    this.game.hero.maxmp += 0.5;
-    this.game.hero.mp = this.game.hero.maxmp;
+    this.game.hero.mp = 1;
+    // this.game.hero.mp += 1;
+    // this.game.hero.maxmp += 1;
+    // this.game.hero.mp = this.game.hero.maxmp;
     this.game.hero.mpEl.innerText = this.game.hero.mp;
 
-    this.game.hero.damage += 1;
-    this.game.hero.maxDamage += 1;
-    this.game.hero.playerATK.innerText = `${this.game.hero.damage}-${this.game.hero.maxDamage}`;
+    // this.game.hero.damage += 1;
+    // this.game.hero.maxDamage += 1;
+    // this.game.hero.playerATK.innerText = `${this.game.hero.damage}-${this.game.hero.maxDamage}`;
 
     this.frameNo = 0;
     hud.style.display = "none";
@@ -256,7 +257,7 @@ export class Enemy {
         : this.enemies[0];
 
       message = `<strong><em>${this.game.hero.name}</em></strong> defeated ${this.name}!💥<br/>
-        ${this.name} took ${damage} damage...<br/>
+        ${this.name} took ${damage} damage.<br/>
         You next enemy is ${nextEnemy.name}.`;
 
       this.stopMusic();

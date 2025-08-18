@@ -117,8 +117,8 @@ export class Hero {
     this.playAudioAttack({ type: "attack" });
 
     let message = "";
-    message = `<strong><em>${this.name}</em></strong> has Attacked!💢<br/>`;
-    message += `${this.game.enemy.name} took ${damage} damage...`;
+    message = `<strong><em>${this.name}</em></strong> has attacked!💢<br/>`;
+    message += `${this.game.enemy.name} took ${damage} damage.`;
 
     if (this.game.enemy.defeated) return;
 
@@ -133,8 +133,8 @@ export class Hero {
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
 
-    let message = `<strong><em>${this.name}</em></strong> landed a <strong>CRITICAL HIT</strong>!💢<br/>`;
-    message += `${this.game.enemy.name} took ${damage} damage..`;
+    let message = `<strong><em>${this.name}</em></strong> landed a <strong>Critical Hit</strong>!💢<br/>`;
+    message += `${this.game.enemy.name} took ${damage} damage.`;
 
     if (this.game.enemy.defeated) return;
 
@@ -154,12 +154,12 @@ export class Hero {
 
     let message = "";
 
-    message = `<strong><em>${this.game.enemy.name}</em></strong> has Attacked!💢<br/>`;
-    message += `${this.name} took ${damage} damage...`;
+    message = `<strong><em>${this.game.enemy.name}</em></strong> has attacked!💢<br/>`;
+    message += `${this.name} took ${damage} damage.`;
 
     if (this.isDead) {
       message = `<strong><em>${this.game.enemy.name}</em></strong> has won the battle!<br/>`;
-      message += `${this.name} took ${damage} damage...<br/>`;
+      message += `${this.name} took ${damage} damage.<br/>`;
 
       // this.game.stopMusic();
       return this.game.showDialog({ icon: this.game.enemy.icon, message });

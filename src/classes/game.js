@@ -43,7 +43,7 @@ export class Game {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           this.loaded = true;
           playBtn.disabled = false;
-          playBtn.innerText = "Play Now!";
+          playBtn.innerHTML = "Turn-Based<br/>Battle RPG<br/>Play Now !";
         }
       };
 
