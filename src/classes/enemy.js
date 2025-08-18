@@ -56,11 +56,11 @@ export class Enemy {
     };
 
     this.sprites["idle"].src =
-      this.enemies[this.currentEnemy].animations.idle.sprite;
+      this.enemies[this.currentEnemy].animations["idle"].sprite;
     this.sprites["hit"].src =
-      this.enemies[this.currentEnemy].animations.attack.sprite;
+      this.enemies[this.currentEnemy].animations["attack"].sprite;
     this.sprites["attack"].src =
-      this.enemies[this.currentEnemy].animations.attack.sprite;
+      this.enemies[this.currentEnemy].animations["attack"].sprite;
 
     this.currentAtk = null;
     this.attacks = [
@@ -117,7 +117,7 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.5;
+    this.music.volume = 0.1;
     this.music.play().catch((error) => console.log(error));
   }
 

@@ -12,5 +12,6 @@ window.addEventListener("load", () => {
   playBtn.addEventListener("click", (e) => {
     game.init();
     e.target.style.display = "none";
+    splash.style.display = "none";
   });
 });
