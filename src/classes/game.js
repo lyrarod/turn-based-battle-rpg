@@ -5,8 +5,9 @@ export class Game {
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
     this.ctx.imageSmoothingEnabled = false;
-    this.width = canvas.width;
-    this.height = canvas.height;
+    this.width = canvas.width =
+      window.innerWidth > 600 ? 600 : window.innerWidth;
+    this.height = canvas.height = window.innerHeight;
     this.playerTurn = true;
     this.enemy = new Enemy(this);
     this.hero = new Hero(this);
@@ -33,7 +34,7 @@ export class Game {
     this.assets = [...this.enemy.assets];
 
     this.assets.forEach((asset, i) => {
-      asset.onload = () => {
+      asset.onload = async () => {
         this.count++;
       };
 
@@ -43,11 +44,11 @@ export class Game {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           this.loaded = true;
           playBtn.disabled = false;
-          playBtn.innerHTML = "Play Game";
+          playBtn.innerText = "Play Game";
         }
       };
 
-      asset.onerror = () => {
+      asset.onerror = async () => {
         console.error(`Asset ${i} failed to load: `, asset);
       };
     });

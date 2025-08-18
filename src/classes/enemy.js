@@ -4,7 +4,7 @@ export class Enemy {
   constructor(game) {
     this.game = game;
     this.enemies = allEnemies();
-    this.currentEnemy = Math.floor(Math.random() * allEnemies().length);
+    this.currentEnemy = 0; //Math.floor(Math.random() * allEnemies().length);
     this.width = 0;
     this.height = 0;
     this.x = 0;
@@ -13,7 +13,7 @@ export class Enemy {
     this.framex = 0;
     this.idy = 0;
     this.framey = 0;
-    this.scale = 2;
+    this.scale = game.width < 600 ? 1.6 : 2;
     this.frame = 0;
     this.frameInterval = 1000 / 12;
     this.loop = null;
@@ -35,7 +35,6 @@ export class Enemy {
     this.attackAudio = null;
     this.attackAudios = {
       attack: new Audio("33HitFist.wav"),
-      furiousAttack: new Audio("Dragon_Attack_2.mp3"),
     };
 
     this.animations = {};
@@ -78,7 +77,6 @@ export class Enemy {
       this.sprites["attack"],
       this.music,
       this.attackAudios.attack,
-      this.attackAudios.furiousAttack,
       this.bgImage,
       this.avatarEl,
     ];

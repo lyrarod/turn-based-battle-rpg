@@ -1,8 +1,8 @@
 export class Hero {
   constructor(game) {
     this.game = game;
-    this.hp = 100;
-    this.maxhp = 100;
+    this.hp = 80;
+    this.maxhp = 80;
     this.mp = 1;
     this.maxmp = 1;
     this.damage = 5;
@@ -54,7 +54,7 @@ export class Hero {
 
     this.isDead = false;
 
-    this.healAudio = new Audio("7DHealingSound.wav");
+    this.healAudio = new Audio("CBCureSpellPart2.wav");
   }
 
   playAudioAttack({ type = "attack" | "criticalAttack" } = { type: "attack" }) {

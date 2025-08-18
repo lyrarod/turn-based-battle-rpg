@@ -3,11 +3,11 @@ import "animate.css";
 
 import { Game } from "./classes/game";
 
-playBtn.innerText = "Loading...";
-
 window.addEventListener("load", () => {
   const canvas = document.getElementById("canvas");
   const game = new Game(canvas);
+
+  playBtn.innerText = "Loading...";
 
   playBtn.addEventListener("click", (e) => {
     game.init();
