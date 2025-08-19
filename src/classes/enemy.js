@@ -44,6 +44,16 @@ export class Enemy {
 
     this.music = new Audio(`/musics/${this.enemies[this.currentEnemy].music}`);
 
+    this.currentAtk = null;
+    this.attacks = [
+      ...Array(2).fill(this.attack),
+      ...Array(1).fill(this.furiousAttack),
+    ];
+
+    this.frameNo = 0;
+    this.animation = "idle";
+    this.playAnimation();
+
     this.bgImage = new Image();
     this.bgImage.src = this.enemies[this.currentEnemy].background;
     canvas.style.backgroundImage = `url(${this.bgImage.src})`;
@@ -61,25 +71,80 @@ export class Enemy {
     this.sprites["attack"].src =
       this.enemies[this.currentEnemy].animations["attack"].sprite;
 
-    this.currentAtk = null;
-    this.attacks = [
-      ...Array(2).fill(this.attack),
-      ...Array(1).fill(this.furiousAttack),
-    ];
+    this.smokes = [0, 1, 3, 4, 7, 8, 9, 14, 15, 18, 19];
+    this.randomSmokes = () =>
+      this.smokes[Math.floor(Math.random() * this.smokes.length)];
 
-    this.frameNo = 0;
-    this.animation = "idle";
-    this.playAnimation();
+    let idy = this.randomSmokes();
+
+    console.log(idy);
+
+    this.smoke = {
+      image: new Image(),
+      width: 1024 / 16,
+      height: 1280 / 20,
+      framex: Array.from({ length: 16 }, (_, i) => i),
+      framey: Array.from({ length: 20 }, (_, i) => i),
+      idx: 0,
+      idy, // Math.floor(Math.random() * 20),
+      x: 0,
+      y: 0,
+      frame: 0,
+      frameInterval: 1000 / 24,
+      scale: game.width < 600 ? 2 : 3,
+    };
+    this.smoke.image.src = "/smoke.png";
 
     this.assets = [
-      this.sprites["idle"],
-      this.sprites["hit"],
-      this.sprites["attack"],
-      this.music,
-      this.attackAudios.attack,
       this.bgImage,
       this.avatarEl,
+      this.sprites["hit"],
+      this.sprites["idle"],
+      this.sprites["attack"],
+      this.smoke.image,
+      this.music,
+      this.attackAudios.attack,
     ];
+  }
+
+  drawSmoke(deltaTime) {
+    if (!this.game.ctx || !this.defeated) return;
+
+    this.smoke.x =
+      this.game.width * 0.5 - this.smoke.width * 0.5 * this.smoke.scale;
+    this.smoke.y =
+      this.game.height * 0.5 - this.smoke.height * 0.5 * this.smoke.scale;
+
+    this.game.ctx.drawImage(
+      this.smoke.image,
+      this.smoke.framex[this.smoke.idx] * this.smoke.width,
+      this.smoke.framey[this.smoke.idy] * this.smoke.height,
+      this.smoke.width,
+      this.smoke.height,
+      this.smoke.x,
+      this.smoke.y,
+      this.smoke.width * this.smoke.scale,
+      this.smoke.height * this.smoke.scale
+    );
+
+    // this.game.ctx.strokeStyle = "red";
+    // this.game.ctx.strokeRect(
+    //   this.smoke.x,
+    //   this.smoke.y,
+    //   this.smoke.width * this.smoke.scale,
+    //   this.smoke.height * this.smoke.scale
+    // );
+
+    if (this.smoke.frame > this.smoke.frameInterval) {
+      this.smoke.idx++;
+      if (this.smoke.idx > this.smoke.framex.length) {
+        this.smoke.idx = this.smoke.framex.length;
+      }
+
+      this.smoke.frame = 0;
+    } else {
+      this.smoke.frame += deltaTime;
+    }
   }
 
   playAnimation(
@@ -115,7 +180,7 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.1;
+    this.music.volume = 1;
     this.music.play().catch((error) => console.log(error));
   }
 
@@ -126,6 +191,11 @@ export class Enemy {
 
   nextEnemy() {
     this.currentEnemy = (this.currentEnemy + 1) % this.enemies.length;
+    this.smoke.idx = 0;
+    this.smoke.frame = 0;
+    this.smoke.idy = this.randomSmokes();
+    console.log(this.smoke.idy);
+
     this.name = this.enemies[this.currentEnemy].name;
     this.hp = this.enemies[this.currentEnemy].hp;
     this.maxhp = this.enemies[this.currentEnemy].maxhp;
@@ -153,8 +223,8 @@ export class Enemy {
 
     this.avatarEl.src = this.icon;
 
-    this.hp += 20;
-    this.maxhp += 20;
+    this.hp += 0;
+    this.maxhp += 0;
     this.hp = this.maxhp;
     this.hpEl.innerText = this.hp;
 
@@ -254,7 +324,7 @@ export class Enemy {
         ? this.enemies[this.currentEnemy + 1]
         : this.enemies[0];
 
-      message = `<strong><em>${this.game.hero.name}</em></strong> defeated ${this.name}!💥<br/>
+      message = `<strong><em>${this.game.hero.name}</em></strong> defeated ${this.name}!<br/>
         ${this.name} took ${damage} damage.<br/>
         You next enemy is ${nextEnemy.name}.`;
 
@@ -285,9 +355,19 @@ export class Enemy {
       this.width * this.scale,
       this.height * this.scale
     );
+
+    // this.game.ctx.strokeStyle = "cyan";
+    // this.game.ctx.strokeRect(
+    //   this.x,
+    //   this.y,
+    //   this.width * this.scale,
+    //   this.height * this.scale
+    // );
   }
 
   update(deltaTime) {
+    this.drawSmoke(deltaTime);
+
     if (this.frame > this.frameInterval) {
       this.idx++;
       if (this.idx >= this.framex.length) {
