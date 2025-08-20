@@ -220,32 +220,30 @@ body {
   user-select: none;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding-block: 0.75rem;
+  width: 100%;
   color: silver;
-  background-color: rebeccapurple;
-  border-radius: 1rem;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(to right, #6397, rgb(184, 134, 11, 0.2));
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
   font-family: sans-serif;
   font-size: 1.5rem;
   margin-top: 1rem;
   z-index: 999;
-  transition: background-color 0.2s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 /* Loading... */
 #playBtn:disabled {
-  color: silver;
-  background-color: transparent;
   box-shadow: none;
   font-style: italic;
   cursor: not-allowed;
 }
 /* Loading... */
 
-#playBtn:hover:not(:disabled) {
-  color: silver;
-  background-color: rgb(120, 59, 180);
-}
+/* #playBtn:hover:not(:disabled) {
+  background-color: rgb(120, 51, 153);
+} */
 
 @media (min-width: 600px) {
   #playBtn {

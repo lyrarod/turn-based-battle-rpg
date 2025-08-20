@@ -30,7 +30,7 @@ export class Game {
         // console.log("assets onload:", asset);
         if (this.count === this.assets.length) {
           this.loaded = true;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 3000));
           this.playBtn.disabled = false;
           this.playBtn.innerText = "Play Game";
         }
@@ -41,7 +41,7 @@ export class Game {
         // console.log("assets oncanplay:", asset);
         if (this.count === this.assets.length) {
           this.loaded = true;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 3000));
           this.playBtn.disabled = false;
           this.playBtn.innerText = "Play Game";
         }
