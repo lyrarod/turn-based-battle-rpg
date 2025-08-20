@@ -1,6 +1,6 @@
 export const enemies = [
   {
-    music: "kraken-of-the-sea.ogg",
+    music: "Final-Fantasy-Brave-Exvius-DUEL.ogg",
     background: " ",
     name: "Slayer Knight",
     hp: 300,
@@ -33,7 +33,7 @@ export const enemies = [
     },
   },
   {
-    music: "dark_world.ogg",
+    music: "Final-Fantasy-Brave-Exvius-Onslaught.ogg",
     background: " ",
     name: "Swamp Thing",
     hp: 300,
@@ -66,7 +66,7 @@ export const enemies = [
     },
   },
   {
-    music: "battle-against-machine.mp3",
+    music: "Final-Fantasy-Brave-Exvius-Celestial-Battle.ogg",
     background: " ",
     name: "Master Wizard",
     hp: 300,
@@ -132,7 +132,7 @@ export const enemies = [
     },
   },
   {
-    music: "battle-against-machine.mp3",
+    music: "battle-against-machine.ogg",
     background: "",
     name: "Lava Golem",
     hp: 300,
@@ -231,7 +231,7 @@ export const enemies = [
     },
   },
   {
-    music: "battle-against-machine.mp3",
+    music: "kraken-of-the-sea.ogg",
     background: "bg/battle_bg_0002_03.jpg",
     name: "Diamond Golem",
     hp: 500,
@@ -273,8 +273,8 @@ export const allEnemies = () => {
       ...enemy,
       slug,
       icon: `enemies/${slug}/${slug}-icon.png`,
-      hp: 200,
-      maxhp: 200,
+      hp: 100,
+      maxhp: 100,
       damage: 10,
       maxDamage: 15,
       background: `enemies/${slug}/${slug}-battle_bg.jpg`,
