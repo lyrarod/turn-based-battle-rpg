@@ -18,16 +18,7 @@ export class Game {
 
     this.gameEl = document.getElementById("game");
     this.canvasEl = document.getElementById("canvas");
-
-    this.musics = [
-      "musics/battle-against-machine.mp3",
-      "musics/dark_world.ogg",
-      "musics/kraken-of-the-sea.ogg",
-      "musics/overworld.ogg",
-    ];
-    this.randomMusic = new Audio(
-      this.musics[Math.floor(Math.random() * this.musics.length)]
-    );
+    this.playBtn = document.getElementById("playBtn");
 
     this.count = 0;
     this.loaded = false;
@@ -36,19 +27,27 @@ export class Game {
     this.assets.forEach((asset, i) => {
       asset.onload = async () => {
         this.count++;
+        // console.log("assets onload:", asset);
+        if (this.count === this.assets.length) {
+          this.loaded = true;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          this.playBtn.disabled = false;
+          this.playBtn.innerText = "Play Game";
+        }
       };
 
       asset.oncanplay = async () => {
         this.count++;
+        // console.log("assets oncanplay:", asset);
         if (this.count === this.assets.length) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
           this.loaded = true;
-          playBtn.disabled = false;
-          playBtn.innerText = "Play Game";
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          this.playBtn.disabled = false;
+          this.playBtn.innerText = "Play Game";
         }
       };
 
-      asset.onerror = async () => {
+      asset.onerror = () => {
         console.error(`Asset ${i} failed to load: `, asset);
       };
     });
@@ -86,7 +85,7 @@ export class Game {
     location.reload();
   }
 
-  showDialog({ icon = this.hero.icon, message = "" }) {
+  showDialog({ message = "" }) {
     dialog.addEventListener("click", () => {
       if (this.enemy.defeated) {
         this.removeDialog();
@@ -102,7 +101,6 @@ export class Game {
     });
 
     dialog.style.display = "flex";
-    dialogIcon.src = icon;
     dialogText.innerHTML = message;
   }
 

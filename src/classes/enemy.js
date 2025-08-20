@@ -13,7 +13,7 @@ export class Enemy {
     this.framex = 0;
     this.idy = 0;
     this.framey = 0;
-    this.scale = game.width < 600 ? 1.6 : 2;
+    this.scale = game.width < 600 ? 1.3 : 2.3;
     this.frame = 0;
     this.frameInterval = 1000 / 12;
     this.loop = null;
@@ -80,23 +80,23 @@ export class Enemy {
     let idy = this.randomSmokes();
 
     this.smoke = {
-      sprite: new Image(),
       width: 1024 / 16,
       height: 1280 / 20,
+      x: 0,
+      y: 0,
       framex: Array.from({ length: 16 }, (_, i) => i),
       framey: Array.from({ length: 20 }, (_, i) => i),
       idx: 0,
       idy,
-      x: 0,
-      y: 0,
       frame: 0,
       frameInterval: 1000 / 24,
       scale: game.width < 600 ? 2 : 3,
+      sprite: new Image(),
     };
     this.smoke.sprite.src = "/smoke.png";
 
     this.audioVictory = new Audio("/ffiv_victory_fanfare.ogg");
-    this.audioVictory.volume = 0.1;
+    this.audioVictory.volume = 0.2;
 
     this.assets = [
       this.bgImage,
@@ -176,7 +176,7 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.1;
+    this.music.volume = 0.2;
     this.music.play().catch((error) => console.log(error));
   }
 
@@ -322,7 +322,7 @@ export class Enemy {
         ? this.enemies[this.currentEnemy + 1]
         : this.enemies[0];
 
-      message = `<strong><em>${this.game.hero.name}</em></strong> defeated ${this.name}!<br/>
+      message = `<strong>${this.game.hero.name}</strong> defeated ${this.name}!<br/>
         ${this.name} took ${damage} damage.<br/>
         You next enemy is ${nextEnemy.name}.`;
 

@@ -232,6 +232,7 @@ body {
   transition: background-color 0.2s ease-in-out;
 }
 
+/* Loading... */
 #playBtn:disabled {
   color: silver;
   background-color: transparent;
@@ -239,6 +240,7 @@ body {
   font-style: italic;
   cursor: not-allowed;
 }
+/* Loading... */
 
 #playBtn:hover:not(:disabled) {
   color: silver;

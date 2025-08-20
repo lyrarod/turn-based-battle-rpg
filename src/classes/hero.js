@@ -1,8 +1,8 @@
 export class Hero {
   constructor(game) {
     this.game = game;
-    this.hp = 80;
-    this.maxhp = 80;
+    this.hp = 35;
+    this.maxhp = 35;
     this.mp = 1;
     this.maxmp = 1;
     this.damage = 5;
@@ -68,7 +68,6 @@ export class Hero {
     if (this.hp >= this.maxhp) {
       this.game.playerTurn = true;
       return this.game.showDialog({
-        icon: this.icon,
         message: `You are already at full health!`,
       });
     }
@@ -117,7 +116,7 @@ export class Hero {
     this.playAudioAttack({ type: "attack" });
 
     let message = "";
-    message = `<strong><em>${this.name}</em></strong> has attacked!<br/>`;
+    message = `<strong>${this.name}</strong> has attacked!<br/>`;
     message += `${this.game.enemy.name} took ${damage} damage.`;
 
     if (this.game.enemy.defeated) return;
@@ -128,12 +127,12 @@ export class Hero {
   criticalAttack() {
     if (!this.game.playerTurn) return;
     this.game.playerTurn = false;
-    let damage = this.maxDamage * 5; //+ Math.floor(Math.random() * 101);
+    let damage = this.maxDamage * 2; //+ Math.floor(Math.random() * 101);
     // console.log("criticalAttack:", damage);
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
 
-    let message = `<strong><em>${this.name}</em></strong> landed a Critical Hit!<br/>`;
+    let message = `<strong>${this.name}</strong> landed a Critical Hit!<br/>`;
     message += `${this.game.enemy.name} took ${damage} damage.`;
 
     if (this.game.enemy.defeated) return;
@@ -154,26 +153,23 @@ export class Hero {
 
     let message = "";
 
-    message = `<strong><em>${this.game.enemy.name}</em></strong> has attacked!<br/>`;
+    message = `<strong>${this.game.enemy.name}</strong> has attacked!<br/>`;
     message += `${this.name} took ${damage} damage.`;
 
     if (this.isDead) {
-      message = `<strong><em>${this.game.enemy.name}</em></strong> has won the battle!<br/>`;
+      message = `<strong>${this.game.enemy.name}</strong> has won the battle!<br/>`;
       message += `${this.name} took ${damage} damage.<br/>`;
 
       // this.game.stopMusic();
-      return this.game.showDialog({ icon: this.game.enemy.icon, message });
+      return this.game.showDialog({ message });
     }
 
-    return this.game.showDialog({
-      icon: this.game.enemy.icon,
-      message,
-    });
+    return this.game.showDialog({ message });
   }
 
   update() {
-    this.attackBtn.disabled = false;
     this.healBtn.disabled = false;
+    this.attackBtn.disabled = false;
 
     if (!this.game.playerTurn || this.isDead) {
       this.attackBtn.disabled = true;
