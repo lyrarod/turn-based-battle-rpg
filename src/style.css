@@ -174,76 +174,57 @@ body {
   width: 100%;
   height: 100%;
   border: none;
-  background: linear-gradient(45deg, #639 20%, #000 0%);
+  background: #000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
-  font-size: 1.375rem;
-  gap: 0.5rem;
   user-select: none;
   z-index: 999;
 }
 
-@media (min-width: 600px) {
-  #splash {
-    font-size: 2rem;
-  }
-}
-
-#splash h1 {
-  color: #663399;
-  font-weight: 900;
-}
-
 #splashImage {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
   max-width: 100%;
-  overflow: hidden;
   user-select: none;
   pointer-events: none;
-  z-index: -1;
-  opacity: 30%;
-  /* image-rendering: pixelated; */
+  image-rendering: pixelated;
 }
 
 #playBtn {
-  border: none;
-  text-transform: uppercase;
-  font-weight: 900;
   display: flex;
   user-select: none;
   align-items: center;
   justify-content: center;
-  padding-block: 0.75rem;
-  width: 100%;
+  border: none;
+  text-transform: uppercase;
+  font-weight: 900;
+  padding-block: 1rem;
+  width: 80%;
   color: silver;
-  background: linear-gradient(to right, #6397, rgb(184, 134, 11, 0.2));
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  font-family: sans-serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1),
+    rgba(102, 51, 153, 0.5),
+    rgba(102, 51, 153, 0.5),
+    rgba(102, 51, 153, 0.5),
+    rgba(102, 51, 153, 0.5),
+    rgba(0, 0, 0, 1)
+  );
   font-size: 1.5rem;
-  margin-top: 1rem;
+  font-style: italic;
+  transition: all 0.2s ease-in-out;
   z-index: 999;
-  transition: all 0.2s ease;
 }
 
 /* Loading... */
 #playBtn:disabled {
-  box-shadow: none;
-  font-style: italic;
   cursor: not-allowed;
 }
-/* Loading... */
-
-/* #playBtn:hover:not(:disabled) {
-  background-color: rgb(120, 51, 153);
-} */
 
 @media (min-width: 600px) {
   #playBtn {

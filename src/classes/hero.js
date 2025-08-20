@@ -1,8 +1,8 @@
 export class Hero {
   constructor(game) {
     this.game = game;
-    this.hp = 35;
-    this.maxhp = 35;
+    this.hp = 40;
+    this.maxhp = 40;
     this.mp = 1;
     this.maxmp = 1;
     this.damage = 5;
@@ -12,7 +12,7 @@ export class Hero {
     this.avatarEl.src = this.icon;
     this.name = "Emperor";
 
-    this.attackAudio = "";
+    this.attackAudio = null;
     this.attackAudios = {
       attack: new Audio("8BClawSlash.wav"),
       criticalAttack: new Audio("2ESwordSlashLong.wav"),
@@ -60,6 +60,7 @@ export class Hero {
   playAudioAttack({ type = "attack" | "criticalAttack" } = { type: "attack" }) {
     this.attackAudio = this.attackAudios[type];
     this.attackAudio.currentTime = 0;
+    this.attackAudio.volume = 0.5;
     this.attackAudio.play();
   }
 

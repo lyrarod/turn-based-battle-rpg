@@ -8,7 +8,6 @@ window.addEventListener("load", () => {
   const game = new Game(canvas);
 
   playBtn.innerText = "Loading...";
-
   playBtn.addEventListener("click", (e) => {
     game.init();
     e.target.style.display = "none";

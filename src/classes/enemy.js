@@ -176,7 +176,7 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.2;
+    this.music.volume = 0.25;
     this.music.play().catch((error) => console.log(error));
   }
 
@@ -252,6 +252,7 @@ export class Enemy {
   playAudioAttack({ type = "attack" | "furiousAttack" }) {
     this.attackAudio = this.attackAudios[type];
     this.attackAudio.currentTime = 0;
+    this.attackAudio.volume = 0.5;
     this.attackAudio.play();
   }
 
