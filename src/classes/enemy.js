@@ -96,7 +96,7 @@ export class Enemy {
     this.smoke.sprite.src = "/smoke.png";
 
     this.audioVictory = new Audio("/ffiv_victory_fanfare.ogg");
-    this.audioVictory.volume = 0.1;
+    this.audioVictory.volume = 0.2;
     this.audioVictory.loop = false;
 
     this.assetsImg = [
@@ -126,8 +126,6 @@ export class Enemy {
       this.nextEnemy();
       e.target.disabled = true;
       e.target.innerText = "Loading...";
-      // this.audioVictory.pause();
-      // this.audioVictory.currentTime = 0;
     });
   }
 
@@ -135,9 +133,13 @@ export class Enemy {
     if (!this.game.ctx || !this.defeated) return;
 
     this.smoke.x =
-      this.game.width * 0.5 - this.smoke.width * 0.5 * this.smoke.scale;
+      this.x +
+      this.width * 0.5 * this.scale -
+      this.smoke.width * 0.5 * this.smoke.scale;
     this.smoke.y =
-      this.game.height * 0.5 - this.smoke.height * 0.5 * this.smoke.scale;
+      this.y +
+      this.height * 0.5 * this.scale -
+      this.smoke.height * 0.5 * this.smoke.scale;
 
     this.game.ctx.drawImage(
       this.smoke["sprite"],
@@ -391,7 +393,7 @@ export class Enemy {
     let afterVictory = document.getElementById("afterVictory");
     let img = document.querySelector("#afterVictory > img");
     afterVictory.style.display = "flex";
-    img.src = "/emperor.gif";
+    img.src = "/emperor_win.gif";
   }
 
   draw() {
@@ -449,7 +451,6 @@ export class Enemy {
           }
         }
       }
-
       this.frame = 0;
     } else {
       this.frame += deltaTime;

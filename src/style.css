@@ -249,6 +249,24 @@ body {
   z-index: 999;
 }
 
+#afterVictory > h1 {
+  color: #639;
+  background-image: linear-gradient(45deg, #639 40%, darkgoldenrod 70%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  font-size: 2.5rem;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+}
+
+@media (min-width: 600px) {
+  #afterVictory > h1 {
+    font-size: 3rem;
+  }
+}
+
 #afterVictory > img {
   display: flex;
   align-items: center;
