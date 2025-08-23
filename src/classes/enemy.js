@@ -261,8 +261,8 @@ export class Enemy {
     this.bgImage.src = this.enemies[this.currentEnemy].background;
     canvas.style.backgroundImage = `url(${this.bgImage.src})`;
 
-    this.hp += 20;
-    this.maxhp += 20;
+    this.hp += 15;
+    this.maxhp += 15;
     this.hp = this.maxhp;
     this.hpEl.innerText = this.hp;
 
@@ -281,8 +281,8 @@ export class Enemy {
     // this.game.hero.mp = this.game.hero.maxmp;
     this.game.hero.mpEl.innerText = this.game.hero.mp;
 
-    this.game.hero.damage += 0.25;
-    this.game.hero.maxDamage += 0.25;
+    this.game.hero.damage += 1;
+    this.game.hero.maxDamage += 1;
     this.game.hero.playerATK.innerText = `${this.game.hero.damage}-${this.game.hero.maxDamage}`;
   }
 
