@@ -260,7 +260,7 @@ body {
   image-rendering: pixelated;
 }
 
-#afterVictory #nextBtn {
+#nextBtn {
   display: flex;
   user-select: none;
   align-items: center;
@@ -287,8 +287,13 @@ body {
   transition: all 0.1s ease-in-out;
 }
 
+/* Loading... */
+#nextBtn:disabled {
+  cursor: not-allowed;
+}
+
 @media (min-width: 600px) {
-  #afterVictory #nextBtn {
+  #nextBtn {
     cursor: pointer;
   }
 }

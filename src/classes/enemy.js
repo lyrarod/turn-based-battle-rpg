@@ -121,6 +121,14 @@ export class Enemy {
 
     this.count = 0;
     this.isLoaded = false;
+
+    nextBtn.addEventListener("click", (e) => {
+      this.nextEnemy();
+      e.target.disabled = true;
+      e.target.innerText = "Loading...";
+      // this.audioVictory.pause();
+      // this.audioVictory.currentTime = 0;
+    });
   }
 
   drawSmoke(deltaTime) {
@@ -253,8 +261,8 @@ export class Enemy {
     this.bgImage.src = this.enemies[this.currentEnemy].background;
     canvas.style.backgroundImage = `url(${this.bgImage.src})`;
 
-    this.hp += 0;
-    this.maxhp += 0;
+    this.hp += 20;
+    this.maxhp += 20;
     this.hp = this.maxhp;
     this.hpEl.innerText = this.hp;
 
@@ -262,8 +270,8 @@ export class Enemy {
     this.maxDamage += 0;
     this.enemyATK.innerText = `${this.damage}-${this.maxDamage}`;
 
-    this.game.hero.hp += 10;
-    this.game.hero.maxhp += 10;
+    this.game.hero.hp += 2;
+    this.game.hero.maxhp += 2;
     this.game.hero.hp = this.game.hero.maxhp;
     this.game.hero.hpEl.innerText = this.game.hero.hp;
 
@@ -273,12 +281,9 @@ export class Enemy {
     // this.game.hero.mp = this.game.hero.maxmp;
     this.game.hero.mpEl.innerText = this.game.hero.mp;
 
-    // this.game.hero.damage += 1;
-    // this.game.hero.maxDamage += 1;
-    // this.game.hero.playerATK.innerText = `${this.game.hero.damage}-${this.game.hero.maxDamage}`;
-
-    this.frameNo = 0;
-    hud.style.display = "none";
+    this.game.hero.damage += 0.25;
+    this.game.hero.maxDamage += 0.25;
+    this.game.hero.playerATK.innerText = `${this.game.hero.damage}-${this.game.hero.maxDamage}`;
   }
 
   playAudioAttack({ type = "attack" | "furiousAttack" }) {
@@ -367,7 +372,7 @@ export class Enemy {
 
       this.timer = setTimeout(() => {
         return this.loadAfterVictory();
-      }, 4000);
+      }, 3000);
 
       return this.game.removeDialog();
       // return this.game.showDialog({ message });
@@ -384,19 +389,9 @@ export class Enemy {
 
   loadAfterVictory() {
     let afterVictory = document.getElementById("afterVictory");
-    let nextBtn = document.getElementById("nextBtn");
-
-    afterVictory.style.display = "flex";
     let img = document.querySelector("#afterVictory > img");
+    afterVictory.style.display = "flex";
     img.src = "/emperor.gif";
-
-    nextBtn.addEventListener("click", (e) => {
-      this.nextEnemy();
-      e.target.disabled = true;
-      e.target.innerText = "Loading...";
-      // this.audioVictory.pause();
-      // this.audioVictory.currentTime = 0;
-    });
   }
 
   draw() {
@@ -416,6 +411,7 @@ export class Enemy {
   }
 
   update(deltaTime) {
+    this.draw();
     this.drawSmoke(deltaTime);
 
     // console.log(this.isLoaded);
@@ -428,7 +424,10 @@ export class Enemy {
         this.audioVictory.pause();
         this.audioVictory.currentTime = 0;
         this.playMusic();
-      }, 5000);
+
+        this.frameNo = 0;
+        hud.style.display = "none";
+      }, 3000);
       this.isLoaded = false;
     }
 
@@ -458,9 +457,9 @@ export class Enemy {
 
     this.frameNo++;
     // console.log(this.frameNo);
-    if (this.frameNo >= 60) {
-      this.draw();
-      if (this.frameNo === 60) {
+    if (this.frameNo >= 30) {
+      // this.draw();
+      if (this.frameNo === 30) {
         hud.style.display = "flex";
         hud.style.pointerEvents = "none";
         hud.classList.add("animate__animated", "animate__backInUp");
