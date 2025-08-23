@@ -1,4 +1,3 @@
-import { createElement } from "react";
 import { allEnemies } from "./state";
 
 export class Enemy {
