@@ -183,11 +183,11 @@ body {
   z-index: 999;
 }
 
-#splashImage {
+#playerImg {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80%;
+  width: 50%;
   max-width: 100%;
   user-select: none;
   pointer-events: none;
@@ -200,9 +200,7 @@ body {
   align-items: center;
   justify-content: center;
   border: none;
-  text-transform: uppercase;
-  font-weight: 900;
-  padding-block: 1rem;
+
   width: 80%;
   color: silver;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
@@ -215,10 +213,12 @@ body {
     rgba(102, 51, 153, 0.5),
     rgba(0, 0, 0, 1)
   );
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding-block: 1rem;
   font-style: italic;
-  transition: all 0.2s ease-in-out;
-  z-index: 999;
+  transition: all 0.1s ease-in-out;
 }
 
 /* Loading... */
@@ -228,6 +228,67 @@ body {
 
 @media (min-width: 600px) {
   #playBtn {
+    cursor: pointer;
+  }
+}
+
+#afterVictory {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 1rem;
+  user-select: none;
+  z-index: 999;
+}
+
+#afterVictory > img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  max-width: 100%;
+  user-select: none;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+#afterVictory #nextBtn {
+  display: flex;
+  user-select: none;
+  align-items: center;
+  justify-content: center;
+  border: none;
+
+  width: 60%;
+  color: silver;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1),
+    rgba(102, 51, 153, 0.5),
+    rgba(102, 51, 153, 0.5),
+    rgba(102, 51, 153, 0.5),
+    rgba(102, 51, 153, 0.5),
+    rgba(0, 0, 0, 1)
+  );
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding-block: 1rem;
+  font-style: italic;
+  transition: all 0.1s ease-in-out;
+}
+
+@media (min-width: 600px) {
+  #afterVictory #nextBtn {
     cursor: pointer;
   }
 }

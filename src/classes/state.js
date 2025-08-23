@@ -278,6 +278,7 @@ export const allEnemies = () => {
       damage: 10,
       maxDamage: 15,
       background: `enemies/${slug}/${slug}-battle_bg.jpg`,
+      defeated: false,
       animations: {
         ...enemy.animations,
         idle: {

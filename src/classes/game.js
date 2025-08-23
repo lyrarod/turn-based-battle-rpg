@@ -24,26 +24,30 @@ export class Game {
     this.loaded = false;
     this.assets = [...this.enemy.assets];
 
+    const playGame = async (timer = 0) => {
+      await new Promise((resolve) => setTimeout(resolve, timer));
+      this.playBtn.disabled = false;
+      this.playBtn.innerText = "Play Game";
+    };
+
     this.assets.forEach((asset, i) => {
-      asset.onload = async () => {
+      asset.onload = () => {
         this.count++;
-        // console.log("assets onload:", asset);
+        // console.log("asset onload:", asset);
         if (this.count === this.assets.length) {
           this.loaded = true;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          this.playBtn.disabled = false;
-          this.playBtn.innerText = "Play Game";
+          // console.log("loaded onload");
+          playGame(1000);
         }
       };
 
-      asset.oncanplay = async () => {
+      asset.oncanplay = () => {
         this.count++;
-        // console.log("assets oncanplay:", asset);
+        // console.log("asset oncanplay:", asset);
         if (this.count === this.assets.length) {
           this.loaded = true;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          this.playBtn.disabled = false;
-          this.playBtn.innerText = "Play Game";
+          // console.log("loaded oncanplay");
+          playGame(1000);
         }
       };
 
@@ -68,7 +72,7 @@ export class Game {
   };
 
   init() {
-    this.loop();
+    requestAnimationFrame(this.loop);
     this.playMusic();
   }
 
@@ -88,8 +92,8 @@ export class Game {
   showDialog({ message = "" }) {
     dialog.addEventListener("click", () => {
       if (this.enemy.defeated) {
-        this.removeDialog();
-        return this.enemy.nextEnemy();
+        return this.removeDialog();
+        // return this.enemy.nextEnemy();
       }
 
       if (this.hero.isDead) {

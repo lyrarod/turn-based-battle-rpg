@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import { allEnemies } from "./state";
 
 export class Enemy {
@@ -39,7 +40,7 @@ export class Enemy {
 
     this.animations = {};
 
-    this.defeated = false;
+    this.defeated = this.enemies[this.currentEnemy].defeated;
     this.timer = null;
 
     this.music = new Audio(`/musics/${this.enemies[this.currentEnemy].music}`);
@@ -96,19 +97,31 @@ export class Enemy {
     this.smoke.sprite.src = "/smoke.png";
 
     this.audioVictory = new Audio("/ffiv_victory_fanfare.ogg");
-    this.audioVictory.volume = 0.2;
+    this.audioVictory.volume = 0.1;
+    this.audioVictory.loop = false;
 
-    this.assets = [
+    this.assetsImg = [
       this.bgImage,
       this.avatarEl,
-      this.smoke["sprite"],
       this.sprites["hit"],
       this.sprites["idle"],
       this.sprites["attack"],
+    ];
+
+    this.assetsAudio = [
       this.music,
       this.audioVictory,
       this.attackAudios.attack,
     ];
+
+    this.assets = [
+      ...this.assetsImg,
+      ...this.assetsAudio,
+      this.smoke["sprite"],
+    ];
+
+    this.count = 0;
+    this.isLoaded = false;
   }
 
   drawSmoke(deltaTime) {
@@ -176,17 +189,42 @@ export class Enemy {
     this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
     this.music.currentTime = 0;
     this.music.loop = true;
-    this.music.volume = 0.25;
-    this.music.play().catch((error) => console.log(error));
+    this.music.volume = 0.2;
+    this.music.play().then(() => {});
   }
 
   stopMusic() {
     this.music.pause();
     this.music.currentTime = 0;
+    this.music.src = "";
+  }
+
+  loadAssets() {
+    this.count = 0;
+    this.isLoaded = false;
+
+    this.assetsImg.forEach((asset, i) => {
+      // console.log("asset:", asset);
+      asset.onload = () => {
+        this.count++;
+        // console.log("asset onload:", asset);
+        if (this.count === this.assetsImg.length) {
+          this.isLoaded = true;
+          // console.log("loaded onload");
+        }
+      };
+
+      asset.onerror = () => {
+        console.error(`Asset ${i} failed to load: `, asset);
+      };
+    });
   }
 
   nextEnemy() {
     this.currentEnemy = (this.currentEnemy + 1) % this.enemies.length;
+
+    this.loadAssets();
+
     this.smoke.idx = 0;
     this.smoke.frame = 0;
     this.smoke.idy = this.randomSmokes();
@@ -197,6 +235,7 @@ export class Enemy {
     this.damage = this.enemies[this.currentEnemy].damage;
     this.maxDamage = this.enemies[this.currentEnemy].maxDamage;
     this.icon = this.enemies[this.currentEnemy].icon;
+    this.avatarEl.src = this.icon;
 
     this.sprites["idle"].src =
       this.enemies[this.currentEnemy].animations.idle.sprite;
@@ -208,21 +247,15 @@ export class Enemy {
     this.defeated = false;
     this.game.playerTurn = true;
 
-    this.audioVictory.pause();
-    this.audioVictory.currentTime = 0;
-
-    this.music.src = "";
-    this.playMusic();
+    this.stopMusic();
 
     this.playAnimation();
 
     this.bgImage.src = this.enemies[this.currentEnemy].background;
     canvas.style.backgroundImage = `url(${this.bgImage.src})`;
 
-    this.avatarEl.src = this.icon;
-
-    this.hp += 20;
-    this.maxhp += 20;
+    this.hp += 0;
+    this.maxhp += 0;
     this.hp = this.maxhp;
     this.hpEl.innerText = this.hp;
 
@@ -328,9 +361,17 @@ export class Enemy {
         You next enemy is ${nextEnemy.name}.`;
 
       this.stopMusic();
+
+      this.audioVictory.pause();
       this.audioVictory.currentTime = 0;
       this.audioVictory.play();
-      return this.game.showDialog({ message });
+
+      this.timer = setTimeout(() => {
+        return this.loadAfterVictory();
+      }, 4000);
+
+      return this.game.removeDialog();
+      // return this.game.showDialog({ message });
     }
 
     this.timer = setTimeout(() => {
@@ -340,6 +381,23 @@ export class Enemy {
     this.timer = setTimeout(() => {
       this.randomAttack();
     }, 4000);
+  }
+
+  loadAfterVictory() {
+    let afterVictory = document.getElementById("afterVictory");
+    let nextBtn = document.getElementById("nextBtn");
+
+    afterVictory.style.display = "flex";
+    let img = document.querySelector("#afterVictory > img");
+    img.src = "/emperor.gif";
+
+    nextBtn.addEventListener("click", (e) => {
+      this.nextEnemy();
+      e.target.disabled = true;
+      e.target.innerText = "Loading...";
+      // this.audioVictory.pause();
+      // this.audioVictory.currentTime = 0;
+    });
   }
 
   draw() {
@@ -360,6 +418,20 @@ export class Enemy {
 
   update(deltaTime) {
     this.drawSmoke(deltaTime);
+
+    // console.log(this.isLoaded);
+    if (this.isLoaded === true) {
+      setTimeout(() => {
+        nextBtn.disabled = false;
+        nextBtn.innerText = "Next";
+        afterVictory.style.display = "none";
+
+        this.audioVictory.pause();
+        this.audioVictory.currentTime = 0;
+        this.playMusic();
+      }, 5000);
+      this.isLoaded = false;
+    }
 
     if (this.frame > this.frameInterval) {
       this.idx++;

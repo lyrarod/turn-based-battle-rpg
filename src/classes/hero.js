@@ -11,6 +11,8 @@ export class Hero {
     this.avatarEl = document.getElementById("playerAvatar");
     this.avatarEl.src = this.icon;
     this.name = "Emperor";
+    this.playerImg = document.getElementById("playerImg");
+    this.playerImg.src = "/emperor.gif";
 
     this.attackAudio = null;
     this.attackAudios = {
