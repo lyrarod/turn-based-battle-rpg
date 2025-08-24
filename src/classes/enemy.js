@@ -43,6 +43,11 @@ export class Enemy {
     this.timer = null;
 
     this.music = new Audio(`/musics/${this.enemies[this.currentEnemy].music}`);
+    this.music.currentTime = 0;
+    this.music.loop = true;
+    this.volume = 0.2;
+    this.music.volume = this.volume;
+    this.musicCanplaythrough = false;
 
     this.currentAtk = null;
     this.attacks = [
@@ -195,17 +200,12 @@ export class Enemy {
   }
 
   playMusic() {
-    this.music = new Audio(`musics/${this.enemies[this.currentEnemy].music}`);
-    this.music.currentTime = 0;
-    this.music.loop = true;
-    this.music.volume = 0.2;
-    this.music.play().then(() => {});
+    this.music.play();
   }
 
   stopMusic() {
     this.music.pause();
     this.music.currentTime = 0;
-    this.music.src = "";
   }
 
   loadAssets() {
@@ -256,15 +256,19 @@ export class Enemy {
     this.defeated = false;
     this.game.playerTurn = true;
 
-    this.stopMusic();
+    this.musicCanplaythrough = false;
+    this.music.src = `musics/${this.enemies[this.currentEnemy].music}`;
+    this.music.addEventListener("canplaythrough", () => {
+      this.musicCanplaythrough = true;
+    });
 
     this.playAnimation();
 
     this.bgImage.src = this.enemies[this.currentEnemy].background;
     canvas.style.backgroundImage = `url(${this.bgImage.src})`;
 
-    this.hp += 15;
-    this.maxhp += 15;
+    this.hp += 0;
+    this.maxhp += 0;
     this.hp = this.maxhp;
     this.hpEl.innerText = this.hp;
 
@@ -416,21 +420,22 @@ export class Enemy {
     this.draw();
     this.drawSmoke(deltaTime);
 
-    // console.log(this.isLoaded);
-    if (this.isLoaded === true) {
+    if (this.isLoaded === true && this.musicCanplaythrough === true) {
+      this.isLoaded = false;
+      this.musicCanplaythrough = false;
+
       setTimeout(() => {
         nextBtn.disabled = false;
         nextBtn.innerText = "Next";
         afterVictory.style.display = "none";
 
+        this.music.play();
         this.audioVictory.pause();
         this.audioVictory.currentTime = 0;
-        this.playMusic();
 
         this.frameNo = 0;
         hud.style.display = "none";
       }, 3000);
-      this.isLoaded = false;
     }
 
     if (this.frame > this.frameInterval) {
