@@ -91,11 +91,6 @@ export class Game {
 
   showDialog({ message = "" }) {
     dialog.addEventListener("click", () => {
-      if (this.enemy.defeated) {
-        return this.removeDialog();
-        // return this.enemy.nextEnemy();
-      }
-
       if (this.hero.isDead) {
         this.removeDialog();
         return location.reload();

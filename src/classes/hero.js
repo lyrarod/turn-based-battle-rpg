@@ -5,6 +5,7 @@ export class Hero {
     this.maxhp = 40;
     this.mp = 1;
     this.maxmp = 1;
+    this.mpCost = 1;
     this.damage = 5;
     this.maxDamage = 10;
     this.icon = "/unit_icon_202000507.png";
@@ -75,16 +76,14 @@ export class Hero {
       });
     }
 
-    const mpcost = 1;
-
-    if (this.mp < mpcost) {
+    if (this.mp < this.mpCost) {
       this.game.playerTurn = true;
       return this.game.showDialog({
         message: `You don't have enough MP to heal!`,
       });
     }
 
-    this.mp -= mpcost;
+    this.mp -= this.mpCost;
     let heal = this.maxhp - this.hp;
     this.hp += heal;
     // console.log("heal:", heal);
@@ -113,7 +112,6 @@ export class Hero {
     let damage =
       this.damage +
       Math.floor(Math.random() * (this.maxDamage - this.damage) + 1);
-    // console.log("heroAttack:", damage);
 
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "attack" });
@@ -122,29 +120,24 @@ export class Hero {
     message = `<strong>${this.name}</strong> has attacked!<br/>`;
     message += `${this.game.enemy.name} took ${damage} damage.`;
 
-    if (this.game.enemy.defeated) return;
-
     return this.game.showDialog({ message });
   }
 
   criticalAttack() {
     if (!this.game.playerTurn) return;
     this.game.playerTurn = false;
-    let damage = this.maxDamage * 2; //+ Math.floor(Math.random() * 101);
-    // console.log("criticalAttack:", damage);
+    let damage = this.maxDamage * 2;
     this.game.enemy.takeDamage(damage);
     this.playAudioAttack({ type: "criticalAttack" });
 
     let message = `<strong>${this.name}</strong> landed a Critical Hit!<br/>`;
     message += `${this.game.enemy.name} took ${damage} damage.`;
 
-    if (this.game.enemy.defeated) return;
-
     return this.game.showDialog({ message });
   }
 
   takeDamage(damage) {
-    if (!this.game.playerTurn) return;
+    if (this.game.playerTurn) return;
 
     this.hp -= damage;
     if (this.hp <= 0) {
@@ -159,10 +152,13 @@ export class Hero {
     message += `${this.name} took ${damage} damage.`;
 
     if (this.isDead) {
-      message = `<strong>${this.game.enemy.name}</strong> has won the battle!<br/>`;
+      message = `<strong>You have been defeated!</strong>💢<br/>`;
+      message += `<strong>${this.game.enemy.name}</strong> has won the battle!<br/>`;
       message += `${this.name} took ${damage} damage.<br/>`;
 
-      // this.game.stopMusic();
+      this.timer = setTimeout(() => {
+        location.reload();
+      }, 10000);
       return this.game.showDialog({ message });
     }
 
@@ -170,12 +166,18 @@ export class Hero {
   }
 
   update() {
-    this.healBtn.disabled = false;
     this.attackBtn.disabled = false;
 
     if (!this.game.playerTurn || this.isDead) {
-      this.attackBtn.disabled = true;
       this.healBtn.disabled = true;
+      this.attackBtn.disabled = true;
+      return null;
+    }
+
+    this.healBtn.disabled = false;
+    if (this.hp >= this.maxhp || this.mp < this.mpCost) {
+      this.healBtn.disabled = true;
+      return null;
     }
   }
 }

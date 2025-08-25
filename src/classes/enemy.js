@@ -313,13 +313,12 @@ export class Enemy {
     hud.classList.add("animate__animated", "animate__shakeY");
 
     this.timer = setTimeout(() => {
-      this.game.playerTurn = true;
       let damage =
         this.damage +
         Math.floor(Math.random() * (this.maxDamage - this.damage) + 1);
-      // console.log("enemyAttack:", damage);
       this.playAnimation("idle");
       this.game.hero.takeDamage(damage);
+      this.game.playerTurn = true;
     }, 2000);
 
     hud.addEventListener("animationend", (e) => {
@@ -336,11 +335,10 @@ export class Enemy {
     this.playAudioAttack({ type: "attack" });
 
     this.timer = setTimeout(() => {
-      this.game.playerTurn = true;
       let damage = this.maxDamage;
-      // console.log("enemyfuriousAttack:", damage);
       this.playAnimation("idle");
       this.game.hero.takeDamage(damage);
+      this.game.playerTurn = true;
     }, 3000);
 
     hud.addEventListener("animationend", (e) => {
@@ -371,17 +369,16 @@ export class Enemy {
         You next enemy is ${nextEnemy.name}.`;
 
       this.stopMusic();
-
       this.audioVictory.pause();
       this.audioVictory.currentTime = 0;
       this.audioVictory.play();
 
       this.timer = setTimeout(() => {
+        this.game.removeDialog();
         return this.loadAfterVictory();
       }, 3000);
 
-      return this.game.removeDialog();
-      // return this.game.showDialog({ message });
+      return this.game.showDialog({ message });
     }
 
     this.timer = setTimeout(() => {

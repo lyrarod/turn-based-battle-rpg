@@ -10,6 +10,7 @@ body {
   color: #fff;
   background-color: #000;
   font-family: sans-serif;
+  overflow: hidden;
 }
 
 #canvas {
@@ -255,14 +256,14 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 900;
-  font-size: 2.5rem;
+  font-size: 3rem;
   text-align: center;
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
 }
 
 @media (min-width: 600px) {
   #afterVictory > h1 {
-    font-size: 3rem;
+    font-size: 4rem;
   }
 }
 
