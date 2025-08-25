@@ -145,9 +145,8 @@ export class Hero {
 
   takeDamage(damage) {
     if (!this.game.playerTurn) return;
-    this.hp -= damage;
-    // console.log("takeDamage:", damage);
 
+    this.hp -= damage;
     if (this.hp <= 0) {
       this.hp = 0;
       this.isDead = true;
