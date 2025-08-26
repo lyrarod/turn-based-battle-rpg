@@ -376,7 +376,7 @@ export class Enemy {
       this.timer = setTimeout(() => {
         this.game.removeDialog();
         return this.loadAfterVictory();
-      }, 3000);
+      }, 5000);
 
       return this.game.showDialog({ message });
     }

@@ -38,7 +38,6 @@ export class Hero {
       ...Array(1).fill(this.attack),
       ...Array(1).fill(this.criticalAttack),
     ];
-    // console.log(this.attacks);
 
     this.buttons.forEach((button) => {
       button.addEventListener("click", (e) => {
@@ -46,7 +45,6 @@ export class Hero {
           this.currentAttack =
             this.attacks[Math.floor(Math.random() * this.attacks.length)];
           this.currentAttack();
-          // console.log(this.currentAttack);
         }
 
         if (e.target.id === "healBtn") {
@@ -69,24 +67,10 @@ export class Hero {
 
   heal() {
     if (!this.game.playerTurn) return;
-    if (this.hp >= this.maxhp) {
-      this.game.playerTurn = true;
-      return this.game.showDialog({
-        message: `You are already at full health!`,
-      });
-    }
-
-    if (this.mp < this.mpCost) {
-      this.game.playerTurn = true;
-      return this.game.showDialog({
-        message: `You don't have enough MP to heal!`,
-      });
-    }
 
     this.mp -= this.mpCost;
     let heal = this.maxhp - this.hp;
     this.hp += heal;
-    // console.log("heal:", heal);
 
     if (this.hp > this.maxhp) {
       this.hp = this.maxhp;
@@ -120,6 +104,7 @@ export class Hero {
     message = `<strong>${this.name}</strong> has attacked!<br/>`;
     message += `${this.game.enemy.name} took ${damage} damage.`;
 
+    if (this.game.enemy.defeated) return null;
     return this.game.showDialog({ message });
   }
 
@@ -133,6 +118,7 @@ export class Hero {
     let message = `<strong>${this.name}</strong> landed a Critical Hit!<br/>`;
     message += `${this.game.enemy.name} took ${damage} damage.`;
 
+    if (this.game.enemy.defeated) return null;
     return this.game.showDialog({ message });
   }
 
