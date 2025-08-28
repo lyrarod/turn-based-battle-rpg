@@ -8,7 +8,7 @@ export class Hero {
     this.mpCost = 1;
     this.damage = 5;
     this.maxDamage = 10;
-    this.icon = "/unit_icon_202000507.png";
+    this.icon = "/icon.png";
     this.avatarEl = document.getElementById("playerAvatar");
     this.avatarEl.src = this.icon;
     this.name = "Emperor";

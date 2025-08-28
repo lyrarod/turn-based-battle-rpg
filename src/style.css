@@ -285,7 +285,7 @@ body {
   justify-content: center;
   border: none;
   width: 60%;
-  color: darkgray;
+  color: whitesmoke;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
   background: linear-gradient(
     to right,
@@ -306,6 +306,7 @@ body {
 
 /* Loading... */
 #nextBtn:disabled {
+  color: darkgray;
   cursor: not-allowed;
 }
 

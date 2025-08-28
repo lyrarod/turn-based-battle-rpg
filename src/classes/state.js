@@ -338,6 +338,8 @@ export const allEnemies = () => {
   });
 };
 
+// console.log(allEnemies().length);
+
 export function generateSlug(text) {
   return text
     .normalize("NFD")

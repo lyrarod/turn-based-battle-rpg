@@ -77,7 +77,7 @@ export class Enemy {
       this.enemies[this.currentEnemy].animations["attack"].sprite;
 
     // Smokes
-    this.smokes = [0, 1, 3, 4, 7, 8, 9, 14, 15, 18, 19];
+    this.smokes = [0, 1, 3, 4, 7, 8, 9, 12, 14, 18, 19];
     this.randomSmokes = () => {
       return this.smokes[Math.floor(Math.random() * this.smokes.length)];
     };
@@ -127,10 +127,21 @@ export class Enemy {
     this.count = 0;
     this.isLoaded = false;
 
-    nextBtn.addEventListener("click", (e) => {
-      this.nextEnemy();
+    this.nextBtn = document.getElementById("nextBtn");
+    this.nextBtn.disabled = true;
+    this.nextBtn.innerText = "Loading...";
+
+    this.nextBtn.addEventListener("click", (e) => {
       e.target.disabled = true;
       e.target.innerText = "Loading...";
+
+      this.music.play();
+      this.audioVictory.pause();
+      this.audioVictory.currentTime = 0;
+
+      this.frameNo = 0;
+      hud.style.display = "none";
+      afterVictory.style.display = "none";
     });
   }
 
@@ -375,8 +386,9 @@ export class Enemy {
 
       this.timer = setTimeout(() => {
         this.game.removeDialog();
-        return this.loadAfterVictory();
-      }, 5000);
+        this.loadAfterVictory();
+        return this.nextEnemy();
+      }, 4000);
 
       return this.game.showDialog({ message });
     }
@@ -422,16 +434,8 @@ export class Enemy {
       this.musicCanplaythrough = false;
 
       setTimeout(() => {
-        nextBtn.disabled = false;
-        nextBtn.innerText = "Next";
-        afterVictory.style.display = "none";
-
-        this.music.play();
-        this.audioVictory.pause();
-        this.audioVictory.currentTime = 0;
-
-        this.frameNo = 0;
-        hud.style.display = "none";
+        this.nextBtn.disabled = false;
+        this.nextBtn.innerText = "Next";
       }, 3000);
     }
 
